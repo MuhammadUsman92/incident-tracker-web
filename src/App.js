@@ -1,25 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import DashboardScreen from "./Screens/DashboardScreen";
+// import LoadingBox from "./Components/LoadingBox";
+// import AddPatientScreen from "./Screens/AddPatientScreen";
+// import HealthAdminPanal from "./Screens/HealthAdminPanal";
+// import LoginRegisterScreen from "./Screens/LoginRegisterScreen";
+import SideNavigation from './Components/SideNavigation';
 
-function App() {
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <>
+    <div className="main-div">
+        <SideNavigation />
+        <DashboardScreen />
     </div>
+    </>
   );
-}
+};
 
 export default App;
