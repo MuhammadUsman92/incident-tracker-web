@@ -28,14 +28,12 @@ function LabForm(props) {
 
   const handleLabInputChange = (event, index, field) => {
     const value = event.target.value;
-    const newDivs = setLabDivs((prevDivs) => {
+    setLabDivs((prevDivs) => {
       const newDivs = [...prevDivs];
       newDivs[index] = { ...newDivs[index], [field]: value };
+      props.setLabData(newDivs);
       return newDivs;
     });
-
-    // Call setLabData with updated lab data
-    props.setLabData(newDivs);
   };
 
   const handleLabDeleteClick = (index) => {

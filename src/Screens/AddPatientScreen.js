@@ -4,6 +4,8 @@ import LabForm from "../Components/LabForm";
 import MedicinesForm from "../Components/MedicinesForm";
 import PrescriptionForm from "../Components/PrescriptionForm";
 
+import { Helmet } from 'react-helmet';
+
 function AddPatientScreen() {
   const [labData, setLabData] = useState([]);
   const [DiseaseData, setDiseaseData] = useState([]);
@@ -11,26 +13,23 @@ function AddPatientScreen() {
   const [MedicinesData, setMedicinesData] = useState([]);
 
   const handleSubmit = (event) => {
-    //     event.preventDefault();
+     event.preventDefault();
     //     // Make POST request with labData
-    //     console.log(labData);
+    console.log(labData);
+    console.log(DiseaseData);
+    console.log(prescriptionData);
+    console.log(MedicinesData);
+
   };
 
   return (
     <>
-      <div
-        className="container"
-        style={{
-          padding: 12,
-          marginTop: 16,
-          marginBottom: 16,
-
-          border: "1px solid black",
-          borderRadius: 12,
-        }}
-      >
-        <form className="row g-3" action="/submit-form" method="POST">
-          <div className="col-md-6">
+      <Helmet>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.1/js/bootstrap.min.js"></script>
+    </Helmet>
+      <div className='main-container m-5' >
+        <form className="row g-3">
+          {/* <div className="col-md-6">
             <label className="form-label">User Name</label>
             <input
               id="userName"
@@ -78,19 +77,10 @@ function AddPatientScreen() {
               <option>Female</option>
               <option>Other</option>
             </select>
-          </div>
-          <div style={{ marginTop: 12 }}>
-            <div>
-              <h5
-                style={{
-                  padding: 12,
-                  // marginTop: 16,
-                  border: "1px solid #86b7fe",
-                  borderRadius: 4,
-                  backgroundColor: "#cfe2ff",
-                  color: "#0a58ca",
-                }}
-              >
+          </div> */}
+          <div className="m-4">
+            {/* <div>
+              <h5 className="head-div">
                 Disease
               </h5>
               <div>
@@ -98,18 +88,9 @@ function AddPatientScreen() {
                   <DiseaseForm setDiseaseData={setDiseaseData} />
                 </div>
               </div>
-            </div>
+            </div> */}
             <div>
-              <h5
-                style={{
-                  padding: 12,
-                  // marginTop: 16,
-                  border: "1px solid #86b7fe",
-                  borderRadius: 4,
-                  backgroundColor: "#cfe2ff",
-                  color: "#0a58ca",
-                }}
-              >
+              <h5  className="head-div">
                 Prescription
               </h5>
               <div>
@@ -117,24 +98,13 @@ function AddPatientScreen() {
               </div>
             </div>
             <div>
-              <h5
-                style={{
-                  padding: 12,
-                  // marginTop: 16,
-                  border: "1px solid #86b7fe",
-                  borderRadius: 4,
-                  backgroundColor: "#cfe2ff",
-                  color: "#0a58ca",
-                }}
-              >
+              <h5 className="head-div">
                 Medicines
               </h5>
               <div>
                 <MedicinesForm setMedicinesData={setMedicinesData} />
               </div>
             </div>
-            {/* Accordion */}
-
             <div className="accordion" id="accordionExample">
               <div className="accordion-item">
                 <h2 className="accordion-header" id="headingOne">
@@ -170,7 +140,7 @@ function AddPatientScreen() {
               marginBottom: 18,
             }}
           >
-            <button type="submit" className="btn btn-success btn-lg">
+            <button type="submit" className="btn btn-success btn-lg" onClick={handleSubmit}>
               Submit
             </button>
           </div>

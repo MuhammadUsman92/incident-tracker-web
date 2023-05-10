@@ -20,15 +20,15 @@ function PrescriptionForm(props) {
 
   const handlePrescriptionInputChange = (event, index, field) => {
     const value = event.target.value;
-    const newDivs = setPrescriptionDivs((prevDivs) => {
+    setPrescriptionDivs((prevDivs) => {
       const newDivs = [...prevDivs];
       newDivs[index] = { ...newDivs[index], [field]: value };
+      // Call setPrescriptionData with updated prescription data
+      props.setPrescriptionData(newDivs);
       return newDivs;
     });
-
-    // Call setLabData with updated lab data
-    props.setPrescriptionData(newDivs);
   };
+
 
   const handlePrescriptionDeleteClick = (index) => {
     if (prescriptionDivs.length > 1) {

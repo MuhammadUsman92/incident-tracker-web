@@ -32,15 +32,15 @@ function MedicinesForm(props) {
 
   const handleMedicinesInputChange = (event, index, field) => {
     const value = event.target.value;
-    const newDivs = setMedicinesDivs((prevDivs) => {
+    setMedicinesDivs(prevDivs => {
       const newDivs = [...prevDivs];
       newDivs[index] = { ...newDivs[index], [field]: value };
+      // Call setMedicinesData with updated medicines data
+      props.setMedicinesData(newDivs);
       return newDivs;
     });
-
-    // Call setLabData with updated lab data
-    props.setMedicinesData(newDivs);
   };
+
 
   const handleMedicinesDeleteClick = (index) => {
     if (MedicinesDivs.length > 1) {

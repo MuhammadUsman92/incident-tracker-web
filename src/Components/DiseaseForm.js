@@ -18,17 +18,27 @@ function DiseaseForm(props) {
     }
   };
 
+  // const handleDiseaseInputChange = (event, index, field) => {
+  //   const value = event.target.value;
+  //   const newDivs = setDiseaseDivs((prevDivs) => {
+  //     const newDivs = [...prevDivs];
+  //     newDivs[index] = { ...newDivs[index], [field]: value };
+  //     return newDivs;
+  //   });
+
+  //   // Call setLabData with updated lab data
+  //   props.setDiseaseData(newDivs);
+  // };
   const handleDiseaseInputChange = (event, index, field) => {
     const value = event.target.value;
-    const newDivs = setDiseaseDivs((prevDivs) => {
-      const newDivs = [...prevDivs];
-      newDivs[index] = { ...newDivs[index], [field]: value };
-      return newDivs;
-    });
+    const newDivs = [...DiseaseDivs];
+    newDivs[index] = { ...newDivs[index], [field]: value };
+    setDiseaseDivs(newDivs);
 
     // Call setLabData with updated lab data
     props.setDiseaseData(newDivs);
   };
+
 
   const handleDiseaseDeleteClick = (index) => {
     if (DiseaseDivs.length > 1) {

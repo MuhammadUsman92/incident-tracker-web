@@ -1,16 +1,20 @@
 import React from 'react';
 import CreatePatientForm from '../Components/CreatePatientForm';
-import DoctorFrom from '../Components/DoctorForm';
+import CreateDoctorForm from '../Components/CreateDoctorForm';
 import CreateHospitalForm from '../Components/CreateHospitalForm';
-import CreateLaboratoryFrom from '../Components/CreateLaboratoryFrom';
+import CreateLaboratoryFrom from '../Components/CreateLaboratoryForm';
+import GetPatientForm from '../Components/GetPatientForm';
+import DiseaseForm from '../Components/DiseaseForm';
 
 function DashboardScreen() {
   return (
-    <div className='container mt-5'>
-      <CreatePatientForm/>
-      <DoctorFrom/>
-      <CreateHospitalForm/>
-      <CreateLaboratoryFrom/>
+    <div className='main-container m-5'>
+      {/* <CreatePatientForm />
+      <CreateDoctorForm />
+      <CreateHospitalForm />
+      <CreateLaboratoryFrom /> */}
+      <GetPatientForm />
+
     </div>
   );
 }

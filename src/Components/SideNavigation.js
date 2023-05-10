@@ -9,12 +9,12 @@ import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 function SideNagvigation() {
   return (
 <SideNav
-style={{ display: 'flex', flexDirection: 'column', height: '' }}
+style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
     onSelect={(selected) => {
         // Add your code here
     }}
 >
-<Helmet>
+      <Helmet>
         <script
           src="https://kit.fontawesome.com/d75bbd7b24.js"
           crossorigin="anonymous"
@@ -72,6 +72,22 @@ style={{ display: 'flex', flexDirection: 'column', height: '' }}
                     Create Hospital
                 </NavText>
             </NavItem>
+              <NavItem eventKey="create-hospital">
+                  <NavIcon>
+                      <i className="fa-regular fa-hospital" style={{ fontSize: '1.75em' }} ></i>
+                  </NavIcon>
+                  <NavText>
+                      Create Hospital
+                  </NavText>
+              </NavItem>
+              <NavItem eventKey="create-hospital">
+                  <NavIcon>
+                      <i className="fa-regular fa-hospital" style={{ fontSize: '1.75em' }} ></i>
+                  </NavIcon>
+                  <NavText>
+                      Create Hospital
+                  </NavText>
+              </NavItem>
         </SideNav.Nav>
     </SideNav>
       );

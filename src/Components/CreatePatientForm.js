@@ -12,8 +12,7 @@ import MessageBox from './MessageBox';
 function CreatePatientForm() {
   const [validated, setValidated] = useState(false);
   const [cnic, setCNIC] = useState("");
-
-  const createPatient = useSelector((state) => state.createPatient);
+  const createPatient = useSelector((state) => state.getPatientDiseases);
   const { loading, response, error } = createPatient;
   const dispatch = useDispatch();
   const handleChangeCNIC = (e) => {
@@ -67,7 +66,7 @@ function CreatePatientForm() {
     { error && <MessageBox variant="danger">{error}</MessageBox>}
     { response && <MessageBox variant="success">{response}</MessageBox>}
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
-        <h3>Patent Details</h3>
+        <h5 className="head-div">Patent Details</h5>
         <Row className="mb-3">
           <Form.Group as={Col} md="4" controlId="cnic">
             <Form.Label>CNIC</Form.Label>

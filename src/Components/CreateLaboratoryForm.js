@@ -4,16 +4,15 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { useDispatch, useSelector } from 'react-redux';
-import { hospitalCreate } from '../actions/hospitalActions';
+import { laboratoryCreate } from '../actions/laboratoryActions';
 import LoadingBox from './LoadingBox';
 import MessageBox from './MessageBox';
 
-function CreateHospitalForm() {
+function CreateLaboratoryFrom() {
 const [validated, setValidated] = useState(false);
-const [isEmergencyUnit, setIsEmergencyUnit] = useState(false);
-  const createHospital = useSelector((state) => state.createHospital);
-  const { loading, response, error } = createHospital;
-  const dispatch = useDispatch();
+const createLaboratory = useSelector((state) => state.createLaboratory);
+const { loading, response, error } = createLaboratory;
+const dispatch = useDispatch();
 const handleSubmit = (event) => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
@@ -24,7 +23,6 @@ const handleSubmit = (event) => {
     const formData = {
         reg_no: form.elements.reg_no.value,
         name: form.elements.name.value,
-        emergency_unit: isEmergencyUnit,
         location: {
             street: form.elements.street.value,
             city: form.elements.city.value,
@@ -33,16 +31,14 @@ const handleSubmit = (event) => {
             latitude: form.elements.latitude.value,
             longitude: form.elements.longitude.value
           }
-      };
-      dispatch(hospitalCreate(formData));
+    };
+      console.log(formData); // Do something with the form data, like sending it to an API endpoint
+      dispatch(laboratoryCreate(formData));
     }
 
     setValidated(true);
 };
 
-const handleEmergencyUnitChange = (event) => {
-    setIsEmergencyUnit(event.target.checked);
-};
 
   return (
     <>
@@ -50,27 +46,17 @@ const handleEmergencyUnitChange = (event) => {
       {error && <MessageBox variant="danger">{error}</MessageBox>}
       {response && <MessageBox variant="success">{response}</MessageBox>}
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
-        <h5 className="head-div">Hospital Details</h5>
+        <h5 className="head-div">Laboratory Details</h5>
         <Row className="mb-3">
-          <Form.Group as={Col} md="5" controlId="reg_no">
+          <Form.Group as={Col} md="6" controlId="reg_no">
             <Form.Label>Reg No.</Form.Label>
             <Form.Control required type="number" placeholder="Reg No." defaultValue="" />
             <Form.Control.Feedback type="invalid">Please enter valid Reg No.</Form.Control.Feedback>
           </Form.Group>
-          <Form.Group as={Col} md="5" controlId="name">
+          <Form.Group as={Col} md="6" controlId="name">
             <Form.Label>Name</Form.Label>
             <Form.Control required type="text" placeholder="Name" defaultValue="" />
             <Form.Control.Feedback type="invalid">Please enter Name.</Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group as={Col} md="2" controlId="emergency_unit">
-            <Form.Label>Emergency Unit</Form.Label>
-            <Form.Check
-              type="switch"
-              id="custom-switch"
-              label="Emergency Unit"
-              onChange={handleEmergencyUnitChange}
-              checked={isEmergencyUnit}
-            />
           </Form.Group>
         </Row>
         <Row className="mb-3">
@@ -159,10 +145,9 @@ const handleEmergencyUnitChange = (event) => {
             feedbackType="invalid"
           />
         </Form.Group>
-        <Button type="submit">Create Hospital</Button>
-      </Form>
-  </>
-    
+        <Button type="submit">Create Laboratory</Button>
+      </Form>  
+    </>
 );
 }
-export default CreateHospitalForm;
+export default CreateLaboratoryFrom;

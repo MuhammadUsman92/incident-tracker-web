@@ -6,11 +6,17 @@ import {
 } from './reducers/userReducers';
 import {
   patientCreationReducer,
+  patientDiseasesGetReducer
 } from './reducers/patientReducers';
 import {
   hospitalCreationReducer,
 } from './reducers/hospitalReducers';
-
+import {
+  laboratoryCreationReducer,
+} from './reducers/laboratoryReducers';
+import {
+  doctorCreationReducer,
+} from './reducers/doctorReducers';
 
 const initialState = {
   userSignin: {
@@ -24,6 +30,9 @@ const reducer = combineReducers({
   userRegister: userRegisterReducer,
   createPatient: patientCreationReducer,
   createHospital: hospitalCreationReducer,
+  createLaboratory: laboratoryCreationReducer,
+  createDoctor: doctorCreationReducer,
+  getPatientDiseases: patientDiseasesGetReducer,
 });
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
