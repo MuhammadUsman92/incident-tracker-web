@@ -6,7 +6,9 @@ import {
   USER_SIGNIN_FAIL,
   USER_SIGNIN_REQUEST,
   USER_SIGNIN_SUCCESS,
- 
+  GET_ALL_USER_FAIL,
+  GET_ALL_USER_REQUEST,
+  GET_ALL_USER_SUCCESS,
 } from '../constants/userConstants';
 
 export const register = (name, email, password) => async (dispatch) => {
@@ -18,8 +20,8 @@ export const register = (name, email, password) => async (dispatch) => {
       password,
     });
     dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
-    dispatch({ type: USER_SIGNIN_SUCCESS, payload: data });
-    localStorage.setItem('userInfo', JSON.stringify(data));
+    // dispatch({ type: USER_SIGNIN_SUCCESS, payload: data });
+    // localStorage.setItem('userInfo', JSON.stringify(data));
   } catch (error) {
     dispatch({
       type: USER_REGISTER_FAIL,
@@ -40,6 +42,22 @@ export const signin = (email, password) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: USER_SIGNIN_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getAllUsers = () => async (dispatch) => {
+  dispatch({ type: GET_ALL_USER_REQUEST});
+  try {
+    const { data } = await Axios.post('http://localhost:9191/user/');
+    dispatch({ type: GET_ALL_USER_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: GET_ALL_USER_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

@@ -7,15 +7,16 @@ import AddPatientScreen from "./Screens/AddPatientScreen";
 // import HealthAdminPanal from "./Screens/HealthAdminPanal";
 // import LoginRegisterScreen from "./Screens/LoginRegisterScreen";
 import SideNavigation from './Components/SideNavigation';
-
+import UsersListScreen from './Screens/UsersListScreen'
 
 const App = () => {
   return (
     <>
     <div className="main-div">
         <SideNavigation />
-        <DashboardScreen />
-        {/* <AddPatientScreen /> */}
+        {/* <DashboardScreen /> */}
+        {/* <AddPatientScreen DiseaseId='5'/> */}
+        <UsersListScreen/>
     </div>
     </>
   );

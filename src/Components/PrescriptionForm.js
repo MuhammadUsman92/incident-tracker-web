@@ -1,118 +1,102 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
+import { Form, Col, Row } from "react-bootstrap";
 
 function PrescriptionForm(props) {
-  const presAddBtnRef = useRef();
+  const [prescription, setPrescription] = useState(() => ({
+    prescriptionComments: "",
+    prescriptionDate: getCurrentDate(),
+    prescriptionTime: getCurrentTime(),
+  }));
 
-  const [prescriptionDivs, setPrescriptionDivs] = useState([
-    { prescriptionComments: "", prescriptionDate: "", prescriptionTime: "" },
-  ]);
+  const [validation, setValidation] = useState({
+    prescriptionComments: false,
+  });
 
-  const addPrescriptionDivs = () => {
-    setPrescriptionDivs([
-      ...prescriptionDivs,
-      { prescriptionComments: "", prescriptionDate: "", prescriptionTime: "" },
-    ]);
-    if (presAddBtnRef) {
-      // 👇 Will scroll smoothly to the top of the next section
-      presAddBtnRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
-  const handlePrescriptionInputChange = (event, index, field) => {
+  const handlePrescriptionInputChange = (event, field) => {
     const value = event.target.value;
-    setPrescriptionDivs((prevDivs) => {
-      const newDivs = [...prevDivs];
-      newDivs[index] = { ...newDivs[index], [field]: value };
-      // Call setPrescriptionData with updated prescription data
-      props.setPrescriptionData(newDivs);
-      return newDivs;
-    });
+    setPrescription((prevPrescription) => ({
+      ...prevPrescription,
+      [field]: value !== "" ? value : getCurrentValue(field),
+    }));
+    setValidation((prevValidation) => ({
+      ...prevValidation,
+      [field]: value !== "",
+    }));
+
+    props.setPrescriptionData((prevPrescriptionData) => ({
+      ...prevPrescriptionData,
+      ...prescription, // Include all fields of prescription state
+      [field]: value !== "" ? value : getCurrentValue(field),
+    }));
   };
 
 
-  const handlePrescriptionDeleteClick = (index) => {
-    if (prescriptionDivs.length > 1) {
-      setPrescriptionDivs((prevDivs) =>
-        prevDivs.filter((div, i) => i !== index)
-      );
+  const getCurrentValue = (field) => {
+    if (field === "prescriptionDate") {
+      return getCurrentDate();
+    } else if (field === "prescriptionTime") {
+      return getCurrentTime();
     }
+    return "";
   };
 
-  const renderPrescriptionDivs = () => {
-    return prescriptionDivs.map((div, index) => (
-      <div
-        key={index}
-        style={{
-          padding: 12,
-          border: "1px solid black",
-          borderRadius: 12,
-          margin: 12,
-        }}
-      >
-        <label className="form-label">Comments</label>
-        <textarea
-          className="form-control"
-          id="prescriptionComments"
-          name="prescriptionComments"
-          rows="3"
-          value={div.prescriptionComments}
-          onChange={(event) =>
-            handlePrescriptionInputChange(event, index, "prescriptionComments")
-          }
-          required
-        ></textarea>
-        <label className="form-label">Date</label>
-        <input
-          type="date"
-          id="prescriptionDate"
-          name="prescriptionDate"
-          className="form-control"
-          value={div.prescriptionDate}
-          onChange={(event) =>
-            handlePrescriptionInputChange(event, index, "prescriptionDate")
-          }
-          required
-        />
-        <label className="form-label">Time</label>
-        <input
-          type="time"
-          id="prescriptionTime"
-          name="prescriptionTime"
-          className="form-control"
-          value={div.prescriptionTime}
-          onChange={(event) =>
-            handlePrescriptionInputChange(event, index, "prescriptionTime")
-          }
-          required
-        />
-        {prescriptionDivs.length > 1 && (
-          <button
-            type="button"
-            style={{ margin: 12 }}
-            className="btn btn-outline-danger btn-sm"
-            onClick={() => handlePrescriptionDeleteClick(index)}
-          >
-            Delete
-          </button>
-        )}
-      </div>
-    ));
-  };
+
+  function getCurrentDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    let month = today.getMonth() + 1;
+    month = month < 10 ? "0" + month : month;
+    let day = today.getDate();
+    day = day < 10 ? "0" + day : day;
+    return `${year}-${month}-${day}`;
+  }
+
+  function getCurrentTime() {
+    const today = new Date();
+    let hours = today.getHours();
+    hours = hours < 10 ? "0" + hours : hours;
+    let minutes = today.getMinutes();
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    return `${hours}:${minutes}`;
+  }
 
   return (
-    <div>
-      {renderPrescriptionDivs()}
-
-      <button
-        ref={presAddBtnRef}
-        type="button"
-        style={{ margin: 12 }}
-        className="btn btn-outline-success"
-        onClick={addPrescriptionDivs}
-      >
-        Add
-      </button>
-    </div>
+    <>
+      <Row className="mb-3">
+        <Form.Group as={Col} controlId="prescriptionComments">
+          <Form.Label>Comments</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows="3"
+            value={prescription.prescriptionComments}
+            onChange={(event) => handlePrescriptionInputChange(event, "prescriptionComments")}
+            required
+            isInvalid={!validation.prescriptionComments}
+          />
+          <Form.Control.Feedback type="invalid">Please enter comments.</Form.Control.Feedback>
+        </Form.Group>
+      </Row>
+      <Row className="mb-3">
+        <Form.Group as={Col} md="6" controlId="prescriptionDate">
+          <Form.Label>Date</Form.Label>
+          <Form.Control
+            type="date"
+            value={prescription.prescriptionDate}
+            onChange={(event) => handlePrescriptionInputChange(event, "prescriptionDate")}
+            required
+          />
+        </Form.Group>
+        <Form.Group as={Col} md="6" controlId="prescriptionTime">
+          <Form.Label>Time</Form.Label>
+          <Form.Control
+            type="time"
+            value={prescription.prescriptionTime}
+            onChange={(event) => handlePrescriptionInputChange(event, "prescriptionTime")}
+            required
+          />
+        </Form.Group>
+      </Row>
+    </>
   );
 }
 

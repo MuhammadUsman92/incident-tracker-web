@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -10,14 +10,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { patientDiseasesGet } from '../actions/patientActions';
 import LoadingBox from './LoadingBox';
 import MessageBox from './MessageBox';
-
+import CreateDiseaseForm from './CreateDiseaseForm';
 
 function GetPatientForm() {
     const [validated, setValidated] = useState(false);
     const [cnic, setCNIC] = useState("");
+    const [currentPage, setCurrentPage] = useState(0);
+    const [diseaseCreated, setDiseaseCreated] = useState(false);
     const getPatientDiseases = useSelector((state) => state.getPatientDiseases);
     const { loading, response, error } = getPatientDiseases;
     const dispatch = useDispatch();
+
     const handleChangeCNIC = (e) => {
         const value = e.target.value;
         // Remove all non-numeric characters from the input
@@ -32,7 +35,8 @@ function GetPatientForm() {
         }
 
         setCNIC(formattedValue);
-    }
+    };
+
     const handleSubmit = (event) => {
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
@@ -40,16 +44,44 @@ function GetPatientForm() {
             event.stopPropagation();
         } else {
             event.preventDefault();
-            console.log(cnic);
-            dispatch(patientDiseasesGet(cnic));
+            setCurrentPage(0); // Reset the page when submitting a new CNIC
+            dispatch(patientDiseasesGet(cnic + "?pageNumber=0&pageSize=20"));
         }
 
         setValidated(true);
     };
+    
+
     const handleListGroupItemClick = (eventKey) => {
         // Handle the click event for the ListGroup item with the given eventKey
         console.log(`Clicked on ListGroup item with eventKey ${eventKey}`);
     };
+
+    const handlePreviousPage = () => {
+        if (currentPage > 0) {
+            setCurrentPage(currentPage - 1);
+            dispatch(patientDiseasesGet(`${cnic}?pageNumber=${currentPage - 1}&pageSize=20`));
+        }
+    };
+
+    const handleNextPage = () => {
+        if (response && currentPage < response.data.totalPage - 1) {
+            setCurrentPage(currentPage + 1);
+            dispatch(patientDiseasesGet(`${cnic}?pageNumber=${currentPage + 1}&pageSize=20`));
+        }
+    };
+    const handleDiseaseCreated = () => {
+        setDiseaseCreated(true);
+    };
+
+    useEffect(() => {
+        if (diseaseCreated) {
+            dispatch(patientDiseasesGet(`${cnic}?pageNumber=0&pageSize=20`));
+            setDiseaseCreated(false); // Reset the flag
+        }
+    }, [diseaseCreated, cnic, dispatch]);
+
+
 
     return (
         <>
@@ -68,76 +100,63 @@ function GetPatientForm() {
                                 value={cnic}
                                 onChange={handleChangeCNIC}
                             />
-                            <Button type="submit">
-                                Button
-                            </Button>
+                            <Button type="submit">Button</Button>
                         </InputGroup>
                         <Form.Control.Feedback type="invalid">
                             Invalid CNIC no.(XXXXX-XXXXXXX-X).
                         </Form.Control.Feedback>
                     </Form.Group>
                 </Row>
+            </Form>
+            {loading===false &&response && response.status === 'OK' && (
                 <Container>
-                    <Row>
-                        <Col>
-                            <ListGroup onSelect={handleListGroupItemClick}>
+                    <ListGroup>
+                        <Row xs={1} sm={2} md={3} lg={4}>
+                            {response?.data?.content.map((disease) => (
+                                <Col>
+                                    <ListGroup.Item
+                                        key={disease.id}
+                                        action
+                                        eventKey={disease.id}
+                                        onClick={() => handleListGroupItemClick(disease.id)}
+                                    >
+                                        <div>
+                                            <span className="disease-name">{disease.name}</span>
+                                            <span className="disease-stage">{disease.stage}</span>
+                                        </div>
+                                    </ListGroup.Item>
 
-                                {response &&
-                                    <Row xs={1} sm={2} md={3} lg={4}>
-                                        <Col>
-                                            <ListGroup.Item eventKey="link1" action>
-                                                Link 1
-                                            </ListGroup.Item>
-                                        </Col>
-                                        <Col>
-                                            <ListGroup.Item eventKey="link2" action>
-                                                Link 2
-                                            </ListGroup.Item>
-                                        </Col>
-                                        <Col>
-                                            <ListGroup.Item eventKey="link3" action>
-                                                Link 3
-                                            </ListGroup.Item>
-                                        </Col>
-                                        <Col>
-                                            <ListGroup.Item eventKey="link4" action>
-                                                Link 4
-                                            </ListGroup.Item>
-                                        </Col>
-                                        <Col>
-                                            <ListGroup.Item eventKey="link5" action>
-                                                Link 5
-                                            </ListGroup.Item>
-                                        </Col>
-                                        <Col>
-                                            <ListGroup.Item eventKey="link6" action>
-                                                Link 6
-                                            </ListGroup.Item>
-                                        </Col>
-                                        <Col>
-                                            <ListGroup.Item eventKey="link7" action>
-                                                Link 7
-                                            </ListGroup.Item>
-                                        </Col>
-                                        <Col>
-                                            <ListGroup.Item eventKey="link8" action>
-                                                Link 8
-                                            </ListGroup.Item>
-                                        </Col>
-                                        <Col>
-                                            <ListGroup.Item eventKey="link9" action>
-                                                Link 9
-                                            </ListGroup.Item>
-                                        </Col>
-                                    </Row>
-                                }
-                            </ListGroup>
+                                </Col>
+                            ))}
+                        </Row>
+                    </ListGroup>
+                    <Row className="mt-3 justify-content-center">
+                        <Col xs="auto">
+                            <Button
+                                variant="outline-primary"
+                                disabled={currentPage === 0}
+                                onClick={handlePreviousPage}
+                            >
+                                Previous
+                            </Button>
+                        </Col>
+                        <Col xs="auto">
+                            <Button
+                                variant="outline-primary"
+                                disabled={currentPage === response.data.totalPage - 1}
+                                onClick={handleNextPage}
+                            >
+                                Next
+                            </Button>
                         </Col>
                     </Row>
+                    <Row>
+                        <CreateDiseaseForm CNIC={cnic} handleDiseaseCreated={handleDiseaseCreated} />
+                    </Row>
                 </Container>
-            </Form>
+            )}
         </>
-
     );
 }
+
 export default GetPatientForm;

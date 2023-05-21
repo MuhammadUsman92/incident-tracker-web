@@ -6,6 +6,9 @@ import {
   USER_SIGNIN_REQUEST,
   USER_SIGNIN_SUCCESS,
   USER_SIGNOUT,
+  GET_ALL_USER_FAIL,
+  GET_ALL_USER_REQUEST,
+  GET_ALL_USER_SUCCESS,
 } from '../constants/userConstants';
 
 export const userRegisterReducer = (state = {}, action) => {
@@ -31,6 +34,19 @@ export const userSigninReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
     case USER_SIGNOUT:
       return {};
+    default:
+      return state;
+  }
+};
+
+export const getAllUsersReducer = (state = {}, action) => {
+  switch (action.type) {
+    case GET_ALL_USER_REQUEST:
+      return { loading: true };
+    case GET_ALL_USER_SUCCESS:
+      return { loading: false, userInfo: action.payload };
+    case GET_ALL_USER_FAIL:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }

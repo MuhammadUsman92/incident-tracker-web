@@ -4,7 +4,6 @@ import CreateDoctorForm from '../Components/CreateDoctorForm';
 import CreateHospitalForm from '../Components/CreateHospitalForm';
 import CreateLaboratoryFrom from '../Components/CreateLaboratoryForm';
 import GetPatientForm from '../Components/GetPatientForm';
-import DiseaseForm from '../Components/DiseaseForm';
 
 function DashboardScreen() {
   return (

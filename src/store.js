@@ -2,11 +2,14 @@ import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import {
   userSigninReducer,
-  userRegisterReducer
+  userRegisterReducer,
+  getAllUsersReducer,
 } from './reducers/userReducers';
 import {
   patientCreationReducer,
-  patientDiseasesGetReducer
+  patientDiseasesGetReducer,
+  patientDiseaseCreateReducer,
+  patientPrescriptionCreateReducer
 } from './reducers/patientReducers';
 import {
   hospitalCreationReducer,
@@ -33,6 +36,9 @@ const reducer = combineReducers({
   createLaboratory: laboratoryCreationReducer,
   createDoctor: doctorCreationReducer,
   getPatientDiseases: patientDiseasesGetReducer,
+  createPatientDisease: patientDiseaseCreateReducer,
+  createPatientPrescription: patientPrescriptionCreateReducer,
+  getUsersAll: getAllUsersReducer,
 });
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(

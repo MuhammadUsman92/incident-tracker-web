@@ -45,7 +45,7 @@ function CreateDoctorForm() {
             <Form.Label>PMDC</Form.Label>
             <Form.Control
               required
-              type="number"
+              type="text"
               placeholder="PMDC"
               defaultValue=""
             />
