@@ -7,13 +7,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { laboratoryCreate } from '../actions/laboratoryActions';
 import LoadingBox from './LoadingBox';
 import MessageBox from './MessageBox';
+import {getCoordinates} from './GetLocation'
+
 
 function CreateLaboratoryFrom() {
 const [validated, setValidated] = useState(false);
 const createLaboratory = useSelector((state) => state.createLaboratory);
 const { loading, response, error } = createLaboratory;
 const dispatch = useDispatch();
-const handleSubmit = (event) => {
+const handleSubmit = async (event) => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
     event.preventDefault();
@@ -21,22 +23,31 @@ const handleSubmit = (event) => {
     } else {
     event.preventDefault();
     const formData = {
-        reg_no: form.elements.reg_no.value,
-        name: form.elements.name.value,
-        location: {
-            street: form.elements.street.value,
-            city: form.elements.city.value,
-            postal_code: form.elements.postal_code.value,
-            country: form.elements.country.value,
-            latitude: form.elements.latitude.value,
-            longitude: form.elements.longitude.value
-          }
+      reg_no: form.elements.reg_no.value,
+      name: form.elements.name.value,
+      location: {
+        street: form.elements.street.value,
+        city: form.elements.city.value,
+        postal_code: form.elements.postal_code.value,
+        country: form.elements.country.value,
+      },
     };
-      console.log(formData); // Do something with the form data, like sending it to an API endpoint
+  
+    try {
+      const { street, city, postal_code, country } = formData.location;
+      const { latitude, longitude } = await getCoordinates(street, city, postal_code, country);
+      
+      formData.location.latitude = latitude;
+      formData.location.longitude = longitude;
+      
+      console.log(formData); // Form data including latitude and longitude
       dispatch(laboratoryCreate(formData));
+    } catch (error) {
+      console.log(error.message);
+      // Handle error
     }
-
     setValidated(true);
+  }
 };
 
 
@@ -59,8 +70,8 @@ const handleSubmit = (event) => {
             <Form.Control.Feedback type="invalid">Please enter Name.</Form.Control.Feedback>
           </Form.Group>
         </Row>
-        <Row className="mb-3">
-          <Form.Group as={Col} md="4" controlId="street">
+        <Row className="mb-2">
+          <Form.Group as={Col} md="6" controlId="street">
             <Form.Label>Street</Form.Label>
             <Form.Control
               required
@@ -72,7 +83,7 @@ const handleSubmit = (event) => {
               Please enter a street.
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group as={Col} md="4" controlId="city">
+          <Form.Group as={Col} md="6" controlId="city">
             <Form.Label>City</Form.Label>
             <Form.Control
               required
@@ -84,21 +95,10 @@ const handleSubmit = (event) => {
               Please enter a city.
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group as={Col} md="4" controlId="postal_code">
-            <Form.Label>Postal Code</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              placeholder="Postal Code"
-              defaultValue=""
-            />
-            <Form.Control.Feedback type="invalid">
-              Please enter a postal code.
-            </Form.Control.Feedback>
-          </Form.Group>
+          
         </Row>
-        <Row className="mb-3">
-          <Form.Group as={Col} md="4" controlId="country">
+        <Row className="mb-2">
+          <Form.Group as={Col} md="6" controlId="country">
             <Form.Label>Country</Form.Label>
             <Form.Control
               required
@@ -110,30 +110,16 @@ const handleSubmit = (event) => {
               Please enter a country.
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group as={Col} md="4" controlId="latitude">
-            <Form.Label>Latitude</Form.Label>
+          <Form.Group as={Col} md="6" controlId="postal_code">
+            <Form.Label>Postal Code</Form.Label>
             <Form.Control
               required
-              type="number"
-              step="any"
-              placeholder="Latitude"
+              type="text"
+              placeholder="Postal Code"
               defaultValue=""
             />
             <Form.Control.Feedback type="invalid">
-              Please enter a latitude.
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group as={Col} md="4" controlId="longitude">
-            <Form.Label>Longitude</Form.Label>
-            <Form.Control
-              required
-              type="number"
-              step="any"
-              placeholder="Longitude"
-              defaultValue=""
-            />
-            <Form.Control.Feedback type="invalid">
-              Please enter a longitude.
+              Please enter a postal code.
             </Form.Control.Feedback>
           </Form.Group>
         </Row>

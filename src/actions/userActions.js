@@ -53,7 +53,12 @@ export const signin = (email, password) => async (dispatch) => {
 export const getAllUsers = () => async (dispatch) => {
   dispatch({ type: GET_ALL_USER_REQUEST});
   try {
-    const { data } = await Axios.post('http://localhost:9191/user/');
+    const { data } = await Axios.post('http://localhost:9191/user/',{
+  headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImV4cCI6MTY4NDkyMzMwNSwiaWF0IjoxNjg0OTA1MzA1fQ.l8JIostIvYj750S8yRzHj1LfRQPUqbKs94AMvZhynK7kaJhbM6gTDaagG29zSmgGKifRoWU2oey1eCLpJDfqjw`,
+        },
+    });
+    
     dispatch({ type: GET_ALL_USER_SUCCESS, payload: data });
   } catch (error) {
     dispatch({

@@ -89,11 +89,12 @@ function CreateDoctorForm() {
           </Form.Group>
           <Form.Group as={Col} md="4" controlId="gender">
             <Form.Label>Gender</Form.Label>
-            <Form.Select aria-label="Default select example">
+            <Form.Select className='custom_form-select' aria-label="Default select example">
               <option value="MALE">Male</option>
               <option value="FEMALE">Female</option>
               <option value="OTHER">Other</option>
             </Form.Select>
+
           </Form.Group>
         </Row>
         <Form.Group className="mb-3">

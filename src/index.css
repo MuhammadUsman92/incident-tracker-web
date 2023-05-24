@@ -133,3 +133,7 @@ input[type=number]::-webkit-outer-spin-button {
 .mr-4{
   margin-right: 4px;
 }
+.custom_form-select{
+    padding-top: 4px !important;
+    padding-bottom: 3.28px !important;
+}
