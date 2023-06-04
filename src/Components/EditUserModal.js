@@ -3,15 +3,11 @@ import { Button, Modal, Form } from 'react-bootstrap';
 
 const allRoles = ['ADMIN_USER', 'NORMAL_USER', 'RESCUE_USER', 'RESCUE_ADMIN', 'HOSPITAL_ADMIN', 'POLICE_USER', 'POLICE_ADMIN']; // Array of all available roles
 
-function EditUserModal({ user }) {
-  const [show, setShow] = useState(false);
+function EditUserModal({ user, show, handleClose }) {
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
   const [roles, setRoles] = useState(user.roles);
   const [hospitalRegNo, setHospitalRegNo] = useState(user.roles.includes('HOSPITAL_ADMIN') ? user.hospitalRegNo || '' : '');
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   const handleSave = () => {
     // Perform validation checks
@@ -53,8 +49,6 @@ function EditUserModal({ user }) {
 
   return (
     <>
-      <Button className='p-2' variant="primary" onClick={handleShow}>Edit</Button>
-
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Edit User</Modal.Title>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Container, Row, Col, Modal, Form } from 'react-bootstrap';
+import { Button, Container, Row, Col } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllUsers } from '../actions/userActions';
@@ -23,11 +23,11 @@ function UsersListScreen() {
 
   useEffect(() => {
     dispatch(getAllUsers());
-  }, []);
+  }, [dispatch]);
 
   return (
     <>
-      <Container fluid className="m-4">
+      <Container>
         <Row className="mt-4">
           <h5 className="head-div">All Users</h5>
         </Row>
@@ -38,42 +38,37 @@ function UsersListScreen() {
             <Table striped bordered hover>
               <thead>
                 <tr>
-                  <th className="p-1">ID</th>
-                  <th className="p-1">Name</th>
-                  <th className="p-1">Email</th>
-                  <th className="p-1">ADMIN_USER</th>
-                  <th className="p-1">NORMAL_USER</th>
-                  <th className="p-1">RESCUE_USER</th>
-                  <th className="p-1">RESCUE_ADMIN</th>
-                  <th className="p-1">HOSPITAL_ADMIN</th>
-                  <th className="p-1">POLICE_USER</th>
-                  <th className="p-1">POLICE_ADMIN</th>
-                  <th className="p-1">Actions</th>
+                  <th className="p-0">ID</th>
+                  <th className="p-0 col-width">Name</th>
+                  <th className="p-0 col-width">Email</th>
+                  <th className="p-0">ROLE_ADMIN</th>
+                  <th className="p-0">ROLE_NORMAL</th>
+                  <th className="p-0">RESCUE_USER</th>
+                  <th className="p-0">RESCUE_ADMIN</th>
+                  <th className="p-0">HOSPITAL_ADMIN</th>
+                  <th className="p-0">POLICE_USER</th>
+                  <th className="p-0">POLICE_ADMIN</th>
+                  <th className="p-0">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {response.data.content.map((user) => (
                   <tr className="text-center" key={user.id}>
-                    <td className="p-1">{user.id}</td>
-                    <td className="p-1">{user.name}</td>
-                    <td className="p-1">{user.email}</td>
-                    <td className="p-1">{user.roles.some((role) => role.name === 'ADMIN_USER') ? '✅' : '❎'}</td>
-                    <td className="p-1">{user.roles.some((role) => role.name === 'ROLE_NORMAL') ? '✅' : '❎'}</td>
-                    <td className="p-1">{user.roles.some((role) => role.name === 'RESCUE_USER') ? '✅' : '❎'}</td>
-                    <td className="p-1">{user.roles.some((role) => role.name === 'RESCUE_ADMIN') ? '✅' : '❎'}</td>
-                    <td className="p-1">{user.roles.some((role) => role.name === 'HOSPITAL_ADMIN') ? '✅' : '❎'}</td>
-                    <td className="p-1">{user.roles.some((role) => role.name === 'POLICE_USER') ? '✅' : '❎'}</td>
-                    <td className="p-1">{user.roles.some((role) => role.name === 'POLICE_ADMIN') ? '✅' : '❎'}</td>
-                    <td className="p-1">
+                    <td className="p-0">{user.id}</td>
+                    <td className="p-0 col-width">{user.name}</td>
+                    <td className="p-0 col-width">{user.email}</td>
+                    <td className="p-0">{user.roles.some((role) => role.name === 'ROLE_ADMIN') ? '✅' : '❎'}</td>
+                    <td className="p-0">{user.roles.some((role) => role.name === 'ROLE_NORMAL') ? '✅' : '❎'}</td>
+                    <td className="p-0">{user.roles.some((role) => role.name === 'RESCUE_USER') ? '✅' : '❎'}</td>
+                    <td className="p-0">{user.roles.some((role) => role.name === 'RESCUE_ADMIN') ? '✅' : '❎'}</td>
+                    <td className="p-0">{user.roles.some((role) => role.name === 'HOSPITAL_ADMIN') ? '✅' : '❎'}</td>
+                    <td className="p-0">{user.roles.some((role) => role.name === 'POLICE_USER') ? '✅' : '❎'}</td>
+                    <td className="p-0">{user.roles.some((role) => role.name === 'POLICE_ADMIN') ? '✅' : '❎'}</td>
+                    <td className="p-0">
                       <Row>
                         <Col>
                           <Button className="p-2" variant="primary" onClick={() => handleShow(user)}>
                             Edit
-                          </Button>
-                        </Col>
-                        <Col>
-                          <Button className="p-2" variant="danger">
-                            Delete
                           </Button>
                         </Col>
                       </Row>
@@ -86,7 +81,17 @@ function UsersListScreen() {
         )}
       </Container>
       {userToEdit && (
-        <EditUserModal user={userToEdit} show={show} handleClose={handleClose} />
+        <EditUserModal
+          user={{
+            id: userToEdit.id,
+            name: userToEdit.name,
+            email: userToEdit.email,
+            roles: userToEdit.roles.map((role) => role.name),
+            hospitalRegNo: userToEdit.hospitalRegNo,
+          }}
+          show={show}
+          handleClose={handleClose}
+        />
       )}
     </>
   );

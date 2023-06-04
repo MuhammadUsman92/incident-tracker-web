@@ -8,15 +8,20 @@ import AddPatientScreen from "./Screens/AddPatientScreen";
 // import LoginRegisterScreen from "./Screens/LoginRegisterScreen";
 import SideNavigation from './Components/SideNavigation';
 import UsersListScreen from './Screens/UsersListScreen'
+import PatientProfile from "./Components/PatientProfile";
+import DiseaseDetails from "./Components/DiseaseDetails";
 
 const App = () => {
   return (
     <>
     <div className="main-div">
         <SideNavigation />
+        <div className="main-container m-3">
+        {/* <PatientProfile/> */}
+        <DiseaseDetails/>
+        </div>
         {/* <DashboardScreen /> */}
         {/* <AddPatientScreen DiseaseId='5'/> */}
-        <UsersListScreen/>
     </div>
     </>
   );

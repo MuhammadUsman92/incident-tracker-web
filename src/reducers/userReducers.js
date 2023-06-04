@@ -44,7 +44,7 @@ export const getAllUsersReducer = (state = {}, action) => {
     case GET_ALL_USER_REQUEST:
       return { loading: true };
     case GET_ALL_USER_SUCCESS:
-      return { loading: false, userInfo: action.payload };
+      return { loading: false, response: action.payload };
     case GET_ALL_USER_FAIL:
       return { loading: false, error: action.payload };
     default:
