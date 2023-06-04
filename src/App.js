@@ -10,6 +10,7 @@ import SideNavigation from "./Components/SideNavigation";
 import UsersListScreen from "./Screens/UsersListScreen";
 import PatientProfile from "./Components/PatientProfile";
 import DiseaseDetails from "./Components/DiseaseDetails";
+
 import CreateCriminalForm from "./Components/CreateCriminalForm";
 import CreatePatientForm from "./Components/CreatePatientForm";
 import CreateDiseaseForm from "./Components/CreateDiseaseForm";
@@ -17,6 +18,7 @@ import CreateDoctorForm from "./Components/CreateDoctorForm";
 import CreateHospitalForm from "./Components/CreateHospitalForm";
 import CreateLaboratoryFrom from "./Components/CreateLaboratoryForm";
 import AddFirScreen from "./Screens/AddFirScreen";
+
 import CreateReportForm from "./Components/CreateReportForm";
 
 const App = () => {
@@ -27,7 +29,15 @@ const App = () => {
         <div className="main-container m-3">
           {/* <PatientProfile/> */}
           {/* <DiseaseDetails/> */}
+          {/* <CriminalDetails/> */}
+          {/* <CrimeDetails /> */}
+
+          {/* <PatientProfile/> */}
+          {/* <DiseaseDetails/> */}
+
           <CreateReportForm />
+
+          {/* <AddFirScreen /> */}
         </div>
         {/* <DashboardScreen /> */}
         {/* <AddPatientScreen DiseaseId='5'/> */}
