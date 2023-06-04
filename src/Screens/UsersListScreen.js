@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Container, Row, Col } from 'react-bootstrap';
-import Table from 'react-bootstrap/Table';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllUsers } from '../actions/userActions';
-import LoadingBox from '../Components/LoadingBox';
-import MessageBox from '../Components/MessageBox';
-import EditUserModal from '../Components/EditUserModal';
+import React, { useState, useEffect } from "react";
+import { Button, Container, Row, Col } from "react-bootstrap";
+import Table from "react-bootstrap/Table";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllUsers } from "../actions/userActions";
+import LoadingBox from "../Components/LoadingBox";
+import MessageBox from "../Components/MessageBox";
+import EditUserModal from "../Components/EditUserModal";
 
 function UsersListScreen() {
   const getUsers = useSelector((state) => state.getUsersAll);
@@ -57,17 +57,49 @@ function UsersListScreen() {
                     <td className="p-0">{user.id}</td>
                     <td className="p-0 col-width">{user.name}</td>
                     <td className="p-0 col-width">{user.email}</td>
-                    <td className="p-0">{user.roles.some((role) => role.name === 'ROLE_ADMIN') ? '✅' : '❎'}</td>
-                    <td className="p-0">{user.roles.some((role) => role.name === 'ROLE_NORMAL') ? '✅' : '❎'}</td>
-                    <td className="p-0">{user.roles.some((role) => role.name === 'RESCUE_USER') ? '✅' : '❎'}</td>
-                    <td className="p-0">{user.roles.some((role) => role.name === 'RESCUE_ADMIN') ? '✅' : '❎'}</td>
-                    <td className="p-0">{user.roles.some((role) => role.name === 'HOSPITAL_ADMIN') ? '✅' : '❎'}</td>
-                    <td className="p-0">{user.roles.some((role) => role.name === 'POLICE_USER') ? '✅' : '❎'}</td>
-                    <td className="p-0">{user.roles.some((role) => role.name === 'POLICE_ADMIN') ? '✅' : '❎'}</td>
+                    <td className="p-0">
+                      {user.roles.some((role) => role.name === "ROLE_ADMIN")
+                        ? "✅"
+                        : "❎"}
+                    </td>
+                    <td className="p-0">
+                      {user.roles.some((role) => role.name === "ROLE_NORMAL")
+                        ? "✅"
+                        : "❎"}
+                    </td>
+                    <td className="p-0">
+                      {user.roles.some((role) => role.name === "RESCUE_USER")
+                        ? "✅"
+                        : "❎"}
+                    </td>
+                    <td className="p-0">
+                      {user.roles.some((role) => role.name === "RESCUE_ADMIN")
+                        ? "✅"
+                        : "❎"}
+                    </td>
+                    <td className="p-0">
+                      {user.roles.some((role) => role.name === "HOSPITAL_ADMIN")
+                        ? "✅"
+                        : "❎"}
+                    </td>
+                    <td className="p-0">
+                      {user.roles.some((role) => role.name === "POLICE_USER")
+                        ? "✅"
+                        : "❎"}
+                    </td>
+                    <td className="p-0">
+                      {user.roles.some((role) => role.name === "POLICE_ADMIN")
+                        ? "✅"
+                        : "❎"}
+                    </td>
                     <td className="p-0">
                       <Row>
                         <Col>
-                          <Button className="p-2" variant="primary" onClick={() => handleShow(user)}>
+                          <Button
+                            className="p-2"
+                            variant="primary"
+                            onClick={() => handleShow(user)}
+                          >
                             Edit
                           </Button>
                         </Col>
