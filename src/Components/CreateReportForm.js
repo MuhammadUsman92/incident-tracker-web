@@ -55,6 +55,19 @@ function CreateReportForm() {
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <h5 className="head-div">Report Details</h5>
         <Row className="mb-3">
+          <Form.Group as={Col} md="3" controlId="laboratoryRegistrationNumber">
+            <Form.Label>Lab Registration Number</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              placeholder="laboratory Registration Number"
+              defaultValue=""
+            />
+            <Form.Control.Feedback type="invalid">
+              Please enter laboratory Registration Number.
+            </Form.Control.Feedback>
+          </Form.Group>
+
           <Form.Group as={Col} md="3" controlId="collectDate">
             <Form.Label>Collection Date</Form.Label>
             <Form.Control
@@ -78,19 +91,6 @@ function CreateReportForm() {
             />
             <Form.Control.Feedback type="invalid">
               Please enter result Date.
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group as={Col} md="3" controlId="laboratoryRegistrationNumber">
-            <Form.Label>Lab Registration Number</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              placeholder="laboratory Registration Number"
-              defaultValue=""
-            />
-            <Form.Control.Feedback type="invalid">
-              Please enter laboratory Registration Number.
             </Form.Control.Feedback>
           </Form.Group>
 

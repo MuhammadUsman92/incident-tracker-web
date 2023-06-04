@@ -18,6 +18,7 @@ import CreateDoctorForm from "./Components/CreateDoctorForm";
 import CreateHospitalForm from "./Components/CreateHospitalForm";
 import CreateLaboratoryFrom from "./Components/CreateLaboratoryForm";
 import AddFirScreen from "./Screens/AddFirScreen";
+import Map from "./Components/Map";
 
 import CreateReportForm from "./Components/CreateReportForm";
 
@@ -35,7 +36,7 @@ const App = () => {
           {/* <PatientProfile/> */}
           {/* <DiseaseDetails/> */}
 
-          <CreateReportForm />
+          <Map />
 
           {/* <AddFirScreen /> */}
         </div>
