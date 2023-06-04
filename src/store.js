@@ -17,6 +17,8 @@ import { doctorCreationReducer } from "./reducers/doctorReducers";
 
 import { criminalCreationReducer } from "./reducers/criminalReducers";
 import { crimeCreationReducer } from "./reducers/crimeReducers";
+import { reportCreationReducer } from "./reducers/reportReducers";
+import { roleEditReducer } from "./reducers/editRoleReducers";
 
 const initialState = {
   userSignin: {
@@ -38,6 +40,8 @@ const reducer = combineReducers({
   getUsersAll: getAllUsersReducer,
   createCriminal: criminalCreationReducer,
   createCrime: crimeCreationReducer,
+  createReport: reportCreationReducer,
+  editRole: roleEditReducer,
 });
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(

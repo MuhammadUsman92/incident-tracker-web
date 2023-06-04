@@ -5,16 +5,16 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Row from "react-bootstrap/Row";
 import { useDispatch, useSelector } from "react-redux";
-import { doctorCreate } from "../actions/doctorActions";
+import { createCriminal } from "../actions/criminalAction";
 import LoadingBox from "./LoadingBox";
 import MessageBox from "./MessageBox";
 import { getCoordinates } from "./GetLocation";
 
 function CreateCriminalForm() {
   const [validated, setValidated] = useState(false);
-  const createCriminal = useSelector((state) => state.createCriminal);
+  const criminalCreate = useSelector((state) => state.createCriminal);
   const [cnic, setCNIC] = useState("");
-  const { loading, response, error } = createCriminal;
+  const { loading, response, error } = criminalCreate;
   const dispatch = useDispatch();
   const handleSubmit = async (event) => {
     const form = event.currentTarget;
