@@ -17,6 +17,7 @@ import CreateDoctorForm from "./Components/CreateDoctorForm";
 import CreateHospitalForm from "./Components/CreateHospitalForm";
 import CreateLaboratoryFrom from "./Components/CreateLaboratoryForm";
 import AddFirScreen from "./Screens/AddFirScreen";
+import CreateReportForm from "./Components/CreateReportForm";
 
 const App = () => {
   return (
@@ -26,7 +27,7 @@ const App = () => {
         <div className="main-container m-3">
           {/* <PatientProfile/> */}
           {/* <DiseaseDetails/> */}
-          <AddFirScreen />
+          <CreateReportForm />
         </div>
         {/* <DashboardScreen /> */}
         {/* <AddPatientScreen DiseaseId='5'/> */}
