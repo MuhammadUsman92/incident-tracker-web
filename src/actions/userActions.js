@@ -55,7 +55,7 @@ export const getAllUsers = () => async (dispatch) => {
   try {
     const { data } = await Axios.get('http://localhost:8080/authentication-service/user/',{
   headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJleHAiOjE2ODU4NDYxNDgsImlhdCI6MTY4NTgyODE0OH0.-2s41mTaJppTiSm1jbtYMl1jf9A45tZ1fpEcHYaErPg6sCM2lXKIepWPfLMCT1Y7RJEfY8P7ziT1az9rE1WpvQ`,
+          Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJleHAiOjE2ODU4OTUyNTQsImlhdCI6MTY4NTg3NzI1NH0.1i6WWwwDHaI9QfPyKcJfx9KVrnyINV2NYYsT7UF1LzFDWbLtekAhZMbcRKut4MQWzuvaX4s6YRCJOEO5BOcE1g`,
         },
     });
     console.log(data)

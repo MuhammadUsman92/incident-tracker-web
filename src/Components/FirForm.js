@@ -178,7 +178,7 @@ function FirForm(props) {
             />
           </div>
 
-          <div className="col-md-4 mt-0">
+          <div className="col-md-3 mt-0">
             <label className="form-label mb-1">Comlainant Contact Number</label>
             <input
               type="number"
@@ -193,7 +193,7 @@ function FirForm(props) {
             />
           </div>
 
-          <div className="col-md-4 mt-0">
+          <div className="col-md-3 mt-0">
             <label className="form-label mb-1">Officer phone Number</label>
             <input
               type="number"
@@ -208,21 +208,23 @@ function FirForm(props) {
             />
           </div>
 
-          <div className="col-md-4 mt-0">
-            <label htmlFor="file-upload">Upload Document 1:</label>
+          <div className="col-md-3 mt-0">
+            <label className="form-label mb-1" htmlFor="file-upload">Upload Document 1:</label>
             <input
               id="file-upload1"
               type="file"
+              className="form-control"
               accept="image/*,.pdf"
               onChange={handleImageUpload}
             />
           </div>
 
-          <div className="col-md-4 mt-0">
-            <label htmlFor="file-upload">Upload Document 1:</label>
+          <div className="col-md-3 mt-0">
+            <label className="form-label mb-1" htmlFor="file-upload">Upload Document 1:</label>
             <input
               id="file-upload1"
               type="file"
+              className="form-control"
               accept=".pdf"
               onChange={handlePdfUpload}
             />

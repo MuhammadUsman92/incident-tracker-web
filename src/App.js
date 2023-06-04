@@ -10,10 +10,8 @@ import SideNavigation from "./Components/SideNavigation";
 import UsersListScreen from "./Screens/UsersListScreen";
 import PatientProfile from "./Components/PatientProfile";
 import DiseaseDetails from "./Components/DiseaseDetails";
-<<<<<<< HEAD
 import CriminalDetails from "./Components/CriminalDetails";
 import CrimeDetails from "./Components/CrimeDetails";
-=======
 import CreateCriminalForm from "./Components/CreateCriminalForm";
 import CreatePatientForm from "./Components/CreatePatientForm";
 import CreateDiseaseForm from "./Components/CreateDiseaseForm";
@@ -21,7 +19,7 @@ import CreateDoctorForm from "./Components/CreateDoctorForm";
 import CreateHospitalForm from "./Components/CreateHospitalForm";
 import CreateLaboratoryFrom from "./Components/CreateLaboratoryForm";
 import AddFirScreen from "./Screens/AddFirScreen";
->>>>>>> ccaf688c6b04216e11ba0ea2d149baea377ff4f8
+
 
 const App = () => {
   return (
@@ -29,16 +27,17 @@ const App = () => {
       <div className="main-div">
         <SideNavigation />
         <div className="main-container m-3">
-<<<<<<< HEAD
+
         {/* <PatientProfile/> */}
         {/* <DiseaseDetails/> */}
         {/* <CriminalDetails/> */}
-        <CrimeDetails/>
-=======
+        {/* <CrimeDetails/> */}
+
           {/* <PatientProfile/> */}
           {/* <DiseaseDetails/> */}
-          <AddFirScreen />
->>>>>>> ccaf688c6b04216e11ba0ea2d149baea377ff4f8
+          {/* <AddFirScreen /> */}
+          <UsersListScreen />
+
         </div>
         {/* <DashboardScreen /> */}
         {/* <AddPatientScreen DiseaseId='5'/> */}
