@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import { useDispatch, useSelector } from 'react-redux';
-import { patientDiseaseCreate } from '../actions/patientActions';
-import LoadingBox from './LoadingBox';
-import MessageBox from './MessageBox';
+import React, { useState } from "react";
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
+import { useDispatch, useSelector } from "react-redux";
+import { patientDiseaseCreate } from "../actions/patientActions";
+import LoadingBox from "./LoadingBox";
+import MessageBox from "./MessageBox";
 
 function CreateDiseaseForm(props) {
   const [validated, setValidated] = useState(false);
@@ -18,18 +18,18 @@ function CreateDiseaseForm(props) {
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
+      setValidated(true);
     } else {
       event.preventDefault();
       const formData = {
         name: form.elements.diseasename.value,
         stage: form.elements.stage.value,
       };
-      setValidated(true);
+      setValidated(false);
       await dispatch(patientDiseaseCreate(props.CNIC, formData));
       props.handleDiseaseCreated();
     }
   };
-
 
   return (
     <>

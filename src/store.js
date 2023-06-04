@@ -1,32 +1,29 @@
-import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
-import thunk from 'redux-thunk';
+import { createStore, compose, applyMiddleware, combineReducers } from "redux";
+import thunk from "redux-thunk";
 import {
   userSigninReducer,
   userRegisterReducer,
   getAllUsersReducer,
-} from './reducers/userReducers';
+} from "./reducers/userReducers";
 import {
   patientCreationReducer,
   patientDiseasesGetReducer,
   patientDiseaseCreateReducer,
-  patientPrescriptionCreateReducer
-} from './reducers/patientReducers';
-import {
-  hospitalCreationReducer,
-} from './reducers/hospitalReducers';
-import {
-  laboratoryCreationReducer,
-} from './reducers/laboratoryReducers';
-import {
-  doctorCreationReducer,
-} from './reducers/doctorReducers';
+  patientPrescriptionCreateReducer,
+} from "./reducers/patientReducers";
+import { hospitalCreationReducer } from "./reducers/hospitalReducers";
+import { laboratoryCreationReducer } from "./reducers/laboratoryReducers";
+import { doctorCreationReducer } from "./reducers/doctorReducers";
+
+import { criminalCreationReducer } from "./reducers/criminalReducers";
+import { crimeCreationReducer } from "./reducers/crimeReducers";
 
 const initialState = {
   userSignin: {
-    userInfo: localStorage.getItem('userInfo')
-      ? JSON.parse(localStorage.getItem('userInfo'))
+    userInfo: localStorage.getItem("userInfo")
+      ? JSON.parse(localStorage.getItem("userInfo"))
       : null,
-  }
+  },
 };
 const reducer = combineReducers({
   userSignin: userSigninReducer,
@@ -39,6 +36,8 @@ const reducer = combineReducers({
   createPatientDisease: patientDiseaseCreateReducer,
   createPatientPrescription: patientPrescriptionCreateReducer,
   getUsersAll: getAllUsersReducer,
+  createCriminal: criminalCreationReducer,
+  createCrime: crimeCreationReducer,
 });
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
