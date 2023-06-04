@@ -3,12 +3,12 @@ import LabForm from "../Components/LabForm";
 import MedicinesForm from "../Components/MedicinesForm";
 import PrescriptionForm from "../Components/PrescriptionForm";
 import MessageBox from "../Components/MessageBox";
-import LoadingBox from '../Components/LoadingBox';
-import Form from 'react-bootstrap/Form';
-import { Helmet } from 'react-helmet';
+import LoadingBox from "../Components/LoadingBox";
+import Form from "react-bootstrap/Form";
+import { Helmet } from "react-helmet";
 import { Col } from "react-bootstrap";
-import { useDispatch, useSelector } from 'react-redux';
-import { patientPrescriptionCreate } from '../actions/patientActions';
+import { useDispatch, useSelector } from "react-redux";
+import { patientPrescriptionCreate } from "../actions/patientActions";
 
 function AddPatientScreen(props) {
   const [labData, setLabData] = useState([]);
@@ -18,8 +18,26 @@ function AddPatientScreen(props) {
   const [errorMessagePrescription, setErrorMessagePrescription] = useState("");
   const [selectedDoctor, setSelectedDoctor] = useState("");
   const [validationError, setValidationError] = useState(false);
-  const createPrescription = useSelector((state) => state.createPatientPrescription);
+  const createPrescription = useSelector(
+    (state) => state.createPatientPrescription
+  );
   const { loading, response, error } = createPrescription;
+  const [doctorNames, setDoctorNames] = useState(["khizar", "usman", "ibad"]);
+
+  // useEffect to fetch Doctors name for drop down
+
+  // useEffect(() => {
+  //   const fetchDoctorNames = async () => {
+  //     try {
+  //       const { data } = await Axios.get('http://your-api-url/doctor/names');
+  //       setDoctorNames(data.names);
+  //     } catch (error) {
+  //       // Handle error
+  //     }
+  //   };
+
+  //   fetchDoctorNames();
+  // }, []);
   const dispatch = useDispatch();
   const handleDoctorChange = (event) => {
     const selectedValue = event.target.value;
@@ -28,7 +46,14 @@ function AddPatientScreen(props) {
   };
   const mapMedicineData = (medicineData) => {
     return medicineData.map((medicine) => {
-      const { medicineName, medicineType, medicineQuantity, medicineQuantityUnit, medicineTimings, medicineDuration } = medicine;
+      const {
+        medicineName,
+        medicineType,
+        medicineQuantity,
+        medicineQuantityUnit,
+        medicineTimings,
+        medicineDuration,
+      } = medicine;
       return {
         name: medicineName,
         type: medicineType,
@@ -47,7 +72,9 @@ function AddPatientScreen(props) {
       prescriptionData.prescriptionDate === "" ||
       prescriptionData.prescriptionTime === ""
     ) {
-      setErrorMessagePrescription("Please fill in all the prescription fields.");
+      setErrorMessagePrescription(
+        "Please fill in all the prescription fields."
+      );
       return;
     }
     setErrorMessagePrescription("");
@@ -77,7 +104,9 @@ function AddPatientScreen(props) {
 
     // Proceed with form submission
     const formData = {
-      date: new Date(`${prescriptionData.prescriptionDate}T${prescriptionData.prescriptionTime}:00`).toISOString(),
+      date: new Date(
+        `${prescriptionData.prescriptionDate}T${prescriptionData.prescriptionTime}:00`
+      ).toISOString(),
       comments: prescriptionData.prescriptionComments.trim(),
       medicineSet: mapMedicineData(medicinesData),
     };
@@ -86,7 +115,9 @@ function AddPatientScreen(props) {
     console.log(formData);
     console.log(selectedDoctor);
 
-    dispatch(patientPrescriptionCreate(props.DiseaseId, selectedDoctor, formData));
+    dispatch(
+      patientPrescriptionCreate(props.DiseaseId, selectedDoctor, formData)
+    );
   };
 
   return (
@@ -94,26 +125,28 @@ function AddPatientScreen(props) {
       <Helmet>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.1/js/bootstrap.min.js"></script>
       </Helmet>
-      <div className='main-container m-5'>
+      <div className="main-container">
         {loading && <LoadingBox />}
         {error && <MessageBox variant="danger">{error}</MessageBox>}
         {response && <MessageBox variant="success">{response}</MessageBox>}
         <form className="row g-3">
-          <div className="m-4">
+          <div>
             <div>
-              {errorMessagePrescription !== '' && <MessageBox variant="danger">{errorMessagePrescription}</MessageBox>}
-              <h5 className="head-div">
-                Prescription
-              </h5>
+              {errorMessagePrescription !== "" && (
+                <MessageBox variant="danger">
+                  {errorMessagePrescription}
+                </MessageBox>
+              )}
+              <h5 className="head-div">Prescription</h5>
               <div>
                 <PrescriptionForm setPrescriptionData={setPrescriptionData} />
               </div>
             </div>
             <div>
-              {errorMessage && <MessageBox variant="danger">{errorMessage}</MessageBox>}
-              <h5 className="head-div">
-                Medicines
-              </h5>
+              {errorMessage && (
+                <MessageBox variant="danger">{errorMessage}</MessageBox>
+              )}
+              <h5 className="head-div">Medicines</h5>
               <div>
                 <MedicinesForm setMedicinesData={setMedicinesData} />
               </div>
@@ -159,23 +192,32 @@ function AddPatientScreen(props) {
                 <label className="form-label mr-4">Doctor:</label>
                 <Form.Select
                   aria-label="Default select example"
-                  className={`d-inline-block w-auto ${validationError ? "is-invalid" : ""}`}
+                  className={`d-inline-block w-auto ${
+                    validationError ? "is-invalid" : ""
+                  }`}
                   value={selectedDoctor}
                   onChange={handleDoctorChange}
+                  size="lg"
+                  style={{ maxHeight: "200px", overflowY: "auto" }} // Make dropdown scrollable
                 >
                   <option value="">Please select the doctor</option>
-                  <option value="3454">Usman</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
+                  {doctorNames.map((doctorName) => (
+                    <option key={doctorName} value={doctorName}>
+                      {doctorName}
+                    </option>
+                  ))}
                 </Form.Select>
                 <Form.Control.Feedback type="invalid">
                   Please select a doctor.
                 </Form.Control.Feedback>
               </Form.Group>
-              
             </Col>
             <Col className="text-center">
-              <button type="submit" className="btn btn-success btn-lg" onClick={handleSubmit}>
+              <button
+                type="submit"
+                className="btn btn-success btn-lg"
+                onClick={handleSubmit}
+              >
                 Submit
               </button>
             </Col>

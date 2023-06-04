@@ -1,100 +1,232 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Container, Row, Col } from 'react-bootstrap';
-import Table from 'react-bootstrap/Table';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllUsers } from '../actions/userActions';
-import LoadingBox from '../Components/LoadingBox';
-import MessageBox from '../Components/MessageBox';
-import EditUserModal from '../Components/EditUserModal';
+import React, { useState } from "react";
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
+import Row from "react-bootstrap/Row";
+import { useDispatch, useSelector } from "react-redux";
+import { doctorCreate } from "../actions/doctorActions";
+import LoadingBox from "./LoadingBox";
+import MessageBox from "./MessageBox";
+import { getCoordinates } from "./GetLocation";
 
-function UsersListScreen() {
-  const getUsers = useSelector((state) => state.getUsersAll);
-  const { loading, response, error } = getUsers;
+function CreatePatientForm() {
+  const [validated, setValidated] = useState(false);
+  const createPatient = useSelector((state) => state.createPatient);
+  const [cnic, setCNIC] = useState("");
+  const { loading, response, error } = createPatient;
   const dispatch = useDispatch();
+  const handleSubmit = async (event) => {
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    } else {
+      event.preventDefault();
+      const formData = {
+        cnic: form.elements.cnic.value,
+        name: form.elements.name.value,
+        age: form.elements.age.value,
+        bloodGroup: form.elements.bloodGroup.value,
+        gender: form.elements.gender.value,
+        height: form.elements.height.value,
+        weight: form.elements.weight.value,
+      };
 
-  const [show, setShow] = useState(false);
-  const [userToEdit, setUserToEdit] = useState(null);
+      try {
+        const { street, city, postal_code, country } = formData.location;
+        const { latitude, longitude } = await getCoordinates(
+          street,
+          city,
+          postal_code,
+          country
+        );
 
-  const handleClose = () => setShow(false);
-  const handleShow = (user) => {
-    setUserToEdit(user);
-    setShow(true);
+        formData.location.latitude = latitude;
+        formData.location.longitude = longitude;
+
+        console.log(formData); // Form data including latitude and longitude
+        dispatch(createPatient(formData));
+      } catch (error) {
+        console.log(error.message);
+        // Handle error
+      }
+    }
+
+    setValidated(true);
   };
 
-  useEffect(() => {
-    dispatch(getAllUsers());
-  }, [dispatch]);
+  const handleChangeCNIC = (e) => {
+    const value = e.target.value;
+    // Remove all non-numeric characters from the input
+    const newValue = value.replace(/\D/g, "");
+    // Add hyphens after the first 5 and 12 digits
+    let formattedValue = "";
+    for (let i = 0; i < newValue.length; i++) {
+      if (i === 5 || i === 12) {
+        formattedValue += "-";
+      }
+      formattedValue += newValue[i];
+    }
+
+    setCNIC(formattedValue);
+  };
 
   return (
     <>
-      <Container fluid>
-        <Row className="mt-4">
-          <h5 className="head-div">All Users</h5>
+      {loading && <LoadingBox />}
+      {error && <MessageBox variant="danger">{error}</MessageBox>}
+      {response && <MessageBox variant="success">{response}</MessageBox>}
+      <Form noValidate validated={validated} onSubmit={handleSubmit}>
+        <h5 className="head-div">Patient Details</h5>
+        <Row className="mb-3">
+          <Form.Group as={Col} md="3" controlId="cnic">
+            <Form.Label>CNIC</Form.Label>
+            <InputGroup className="mb-3">
+              <Form.Control
+                required
+                placeholder="XXXXX-XXXXXXX-X"
+                pattern="\d{5}-\d{7}-\d"
+                value={cnic}
+                onChange={handleChangeCNIC}
+              />
+              <Form.Control.Feedback type="invalid">
+                Invalid CNIC no.XXXXX-XXXXXXX-X.
+              </Form.Control.Feedback>
+            </InputGroup>
+          </Form.Group>
+          <Form.Group as={Col} md="3" controlId="name">
+            <Form.Label>Full Name</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              placeholder="Full name"
+              defaultValue=""
+            />
+            <Form.Control.Feedback type="invalid">
+              Please enter Full Name.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group as={Col} md="3" controlId="age">
+            <Form.Label>Age</Form.Label>
+            <InputGroup hasValidation>
+              <Form.Control type="text" placeholder="age" required />
+              <Form.Control.Feedback type="invalid">
+                Please enter Age.
+              </Form.Control.Feedback>
+            </InputGroup>
+          </Form.Group>
+
+          <Form.Group as={Col} md="3" controlId="gender">
+            <Form.Label>Gender</Form.Label>
+            <Form.Select
+              className="custom_form-select"
+              aria-label="Default select example"
+              required
+            >
+              <option value="">Select Gender</option>
+              <option value="MALE">Male</option>
+              <option value="FEMALE">Female</option>
+              <option value="OTHER">Other</option>
+            </Form.Select>
+          </Form.Group>
         </Row>
-        {loading && <LoadingBox />}
-        {error && <MessageBox variant="danger">{error}</MessageBox>}
-        {response && (
-          <Row>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th className="p-1">ID</th>
-                  <th className="p-1 col-width">Name</th>
-                  <th className="p-1 col-width">Email</th>
-                  <th className="p-1">ROLE_ADMIN</th>
-                  <th className="p-1">ROLE_NORMAL</th>
-                  <th className="p-1">RESCUE_USER</th>
-                  <th className="p-1">RESCUE_ADMIN</th>
-                  <th className="p-1">HOSPITAL_ADMIN</th>
-                  <th className="p-1">POLICE_USER</th>
-                  <th className="p-1">POLICE_ADMIN</th>
-                  <th className="p-1">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {response.data.content.map((user) => (
-                  <tr className="text-center" key={user.id}>
-                    <td className="p-1">{user.id}</td>
-                    <td className="p-1 col-width">{user.name}</td>
-                    <td className="p-1 col-width">{user.email}</td>
-                    <td className="p-1">{user.roles.some((role) => role.name === 'ROLE_ADMIN') ? '✅' : '❎'}</td>
-                    <td className="p-1">{user.roles.some((role) => role.name === 'ROLE_NORMAL') ? '✅' : '❎'}</td>
-                    <td className="p-1">{user.roles.some((role) => role.name === 'RESCUE_USER') ? '✅' : '❎'}</td>
-                    <td className="p-1">{user.roles.some((role) => role.name === 'RESCUE_ADMIN') ? '✅' : '❎'}</td>
-                    <td className="p-1">{user.roles.some((role) => role.name === 'HOSPITAL_ADMIN') ? '✅' : '❎'}</td>
-                    <td className="p-1">{user.roles.some((role) => role.name === 'POLICE_USER') ? '✅' : '❎'}</td>
-                    <td className="p-1">{user.roles.some((role) => role.name === 'POLICE_ADMIN') ? '✅' : '❎'}</td>
-                    <td className="p-1">
-                      <Row>
-                        <Col>
-                          <Button className="p-2" variant="primary" onClick={() => handleShow(user)}>
-                            Edit
-                          </Button>
-                        </Col>
-                      </Row>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </Row>
-        )}
-      </Container>
-      {userToEdit && (
-        <EditUserModal
-          user={{
-            id: userToEdit.id,
-            name: userToEdit.name,
-            email: userToEdit.email,
-            roles: userToEdit.roles.map((role) => role.name),
-            hospitalRegNo: userToEdit.hospitalRegNo,
-          }}
-          show={show}
-          handleClose={handleClose}
-        />
-      )}
+        <Row className="mb-3">
+          <Form.Group as={Col} md="4" controlId="height">
+            <Form.Label>Height</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              placeholder="Height"
+              defaultValue=""
+            />
+            <Form.Control.Feedback type="invalid">
+              Please enter Height.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group as={Col} md="4" controlId="weight">
+            <Form.Label>Weight</Form.Label>
+            <InputGroup hasValidation>
+              <Form.Control type="text" placeholder="Weight" required />
+              <Form.Control.Feedback type="invalid">
+                Please enter Weight.
+              </Form.Control.Feedback>
+            </InputGroup>
+          </Form.Group>
+          <Form.Group as={Col} md="4" controlId="bloodGroup">
+            <Form.Label>Blood Group</Form.Label>
+            <InputGroup hasValidation>
+              <Form.Control type="text" placeholder="Blood Group" required />
+              <Form.Control.Feedback type="invalid">
+                Please enter Blood Group.
+              </Form.Control.Feedback>
+            </InputGroup>
+          </Form.Group>
+        </Row>
+        <Row className="mb-2">
+          <Form.Group as={Col} md="6" controlId="street">
+            <Form.Label>Street</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              placeholder="Street"
+              defaultValue=""
+            />
+            <Form.Control.Feedback type="invalid">
+              Please enter a street.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group as={Col} md="6" controlId="city">
+            <Form.Label>City</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              placeholder="City"
+              defaultValue=""
+            />
+            <Form.Control.Feedback type="invalid">
+              Please enter a city.
+            </Form.Control.Feedback>
+          </Form.Group>
+        </Row>
+        <Row className="mb-2">
+          <Form.Group as={Col} md="6" controlId="country">
+            <Form.Label>Country</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              placeholder="Country"
+              defaultValue=""
+            />
+            <Form.Control.Feedback type="invalid">
+              Please enter a country.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group as={Col} md="6" controlId="postal_code">
+            <Form.Label>Postal Code</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              placeholder="Postal Code"
+              defaultValue=""
+            />
+            <Form.Control.Feedback type="invalid">
+              Please enter a postal code.
+            </Form.Control.Feedback>
+          </Form.Group>
+        </Row>
+
+        <Form.Group className="mb-3">
+          <Form.Check
+            required
+            label="Above details are correct"
+            feedback="You must check that details are correct before submitting."
+            feedbackType="invalid"
+          />
+        </Form.Group>
+        <Button type="submit">Create Criminal</Button>
+      </Form>
     </>
   );
 }
-
-export default UsersListScreen;
+export default CreatePatientForm;

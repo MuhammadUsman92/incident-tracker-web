@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Row from 'react-bootstrap/Row';
-import { useDispatch, useSelector } from 'react-redux';
-import { doctorCreate } from '../actions/doctorActions';
-import LoadingBox from './LoadingBox';
-import MessageBox from './MessageBox';
+import React, { useState } from "react";
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
+import Row from "react-bootstrap/Row";
+import { useDispatch, useSelector } from "react-redux";
+import { doctorCreate } from "../actions/doctorActions";
+import LoadingBox from "./LoadingBox";
+import MessageBox from "./MessageBox";
 
 function CreateDoctorForm() {
   const [validated, setValidated] = useState(false);
@@ -19,18 +19,19 @@ function CreateDoctorForm() {
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
-    }else {
+      setValidated(true);
+    } else {
       event.preventDefault();
       const formData = {
-        pmdc:form.elements.pmdc.value,
+        pmdc: form.elements.pmdc.value,
         name: form.elements.name.value,
         specialization: form.elements.specialization.value,
         qualification: form.elements.qualification.value,
-        gender: form.elements.gender.value
+        gender: form.elements.gender.value,
       };
       dispatch(doctorCreate(formData));
     }
-    setValidated(true);
+    setValidated(false);
   };
 
   return (
@@ -70,11 +71,7 @@ function CreateDoctorForm() {
           <Form.Group as={Col} md="4" controlId="specialization">
             <Form.Label>Specialization</Form.Label>
             <InputGroup hasValidation>
-              <Form.Control
-                type="text"
-                placeholder="Specialization"
-                required
-              />
+              <Form.Control type="text" placeholder="Specialization" required />
               <Form.Control.Feedback type="invalid">
                 Please enter Specialization.
               </Form.Control.Feedback>
@@ -82,19 +79,28 @@ function CreateDoctorForm() {
           </Form.Group>
           <Form.Group as={Col} md="4" controlId="qualification">
             <Form.Label>Qualification</Form.Label>
-            <Form.Control type="text" step="0.1" placeholder="Qualification" required />
+            <Form.Control
+              type="text"
+              step="0.1"
+              placeholder="Qualification"
+              required
+            />
             <Form.Control.Feedback type="invalid">
               Please enter Qualification.
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group as={Col} md="4" controlId="gender">
             <Form.Label>Gender</Form.Label>
-            <Form.Select className='custom_form-select' aria-label="Default select example">
+            <Form.Select
+              className="custom_form-select"
+              aria-label="Default select example"
+              required
+            >
+              <option value="">Select Gender</option>
               <option value="MALE">Male</option>
               <option value="FEMALE">Female</option>
               <option value="OTHER">Other</option>
             </Form.Select>
-
           </Form.Group>
         </Row>
         <Form.Group className="mb-3">
@@ -110,4 +116,4 @@ function CreateDoctorForm() {
     </>
   );
 }
-export default  CreateDoctorForm;
+export default CreateDoctorForm;
