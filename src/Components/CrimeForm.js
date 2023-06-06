@@ -65,7 +65,6 @@ function CrimeForm(props) {
             value={crime.type}
             onChange={(event) => handleCrimeInputChange(event, "type")}
             required
-            isInvalid={!validation.type}
           />
           <Form.Control.Feedback type="invalid">
             Please enter Crime Type.

@@ -4,21 +4,25 @@ import {
     HOSPITAL_CREATION_SUCCESS,
     HOSPITAL_CREATION_FAIL,
 } from '../constants/hospitalConstants';
+import { SERVER_IP } from "./userActions";
 
-export const hospitalCreate = (hospital) => async (dispatch, getState) => {
+
+export const hospitalCreate = (navigate,hospital) => async (dispatch, getState) => {
     dispatch({ type: HOSPITAL_CREATION_REQUEST, payload: hospital });
     try {
-        // const {
-        //   userSignin: { userInfo },
-        // } = getState();
-        // const { data } = await Axios.post('localhost:8084/hospital/', hospital, {
-        const { data } = await Axios.post('http://localhost:8084/hospital/', hospital, {
-            // headers: {
-            //   Authorization: `Bearer ${userInfo.token}`,
-            // },
+        const {
+          userSignin: { userInfo },
+        } = getState();
+        const { data } = await Axios.post(`http://${SERVER_IP}/health-service/hospital/`, hospital, {
+            headers: {
+              Authorization: `Bearer ${userInfo.token}`,
+            },
         });
         dispatch({ type: HOSPITAL_CREATION_SUCCESS, payload: data.message });
     } catch (error) {
+        if (error.response && error.response.status === 401) {
+            navigate('/login-register');
+          }
         dispatch({
             type: HOSPITAL_CREATION_FAIL,
             payload:

@@ -8,11 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { doctorCreate } from "../actions/doctorActions";
 import LoadingBox from "./LoadingBox";
 import MessageBox from "./MessageBox";
+import { useNavigate  } from 'react-router-dom';
 
 function CreateDoctorForm() {
   const [validated, setValidated] = useState(false);
   const createDoctor = useSelector((state) => state.createDoctor);
   const { loading, response, error } = createDoctor;
+  const navigate=useNavigate();
   const dispatch = useDispatch();
   const handleSubmit = (event) => {
     const form = event.currentTarget;
@@ -28,8 +30,9 @@ function CreateDoctorForm() {
         specialization: form.elements.specialization.value,
         qualification: form.elements.qualification.value,
         gender: form.elements.gender.value,
+        about: form.elements.about.value,
       };
-      dispatch(doctorCreate(formData));
+      dispatch(doctorCreate(navigate,formData));
     }
     setValidated(false);
   };
@@ -42,7 +45,7 @@ function CreateDoctorForm() {
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <h5 className="head-div">Doctor Details</h5>
         <Row className="mb-3">
-          <Form.Group as={Col} md="6" controlId="pmdc">
+          <Form.Group as={Col} md="4" controlId="pmdc">
             <Form.Label>PMDC</Form.Label>
             <Form.Control
               required
@@ -54,7 +57,7 @@ function CreateDoctorForm() {
               Please enter vaild PMDC.
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group as={Col} md="6" controlId="name">
+          <Form.Group as={Col} md="4" controlId="name">
             <Form.Label>Full Name</Form.Label>
             <Form.Control
               required
@@ -66,8 +69,6 @@ function CreateDoctorForm() {
               Please enter Full Name.
             </Form.Control.Feedback>
           </Form.Group>
-        </Row>
-        <Row className="mb-3">
           <Form.Group as={Col} md="4" controlId="specialization">
             <Form.Label>Specialization</Form.Label>
             <InputGroup hasValidation>
@@ -101,6 +102,18 @@ function CreateDoctorForm() {
               <option value="FEMALE">Female</option>
               <option value="OTHER">Other</option>
             </Form.Select>
+          </Form.Group>
+          <Form.Group as={Col} md="12" controlId="about">
+            <Form.Label>About</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              placeholder="Enter information about yourself"
+              required
+            />
+            <Form.Control.Feedback type="invalid">
+              Please enter information about yourself.
+            </Form.Control.Feedback>
           </Form.Group>
         </Row>
         <Form.Group className="mb-3">

@@ -7,13 +7,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { patientDiseaseCreate } from "../actions/patientActions";
 import LoadingBox from "./LoadingBox";
 import MessageBox from "./MessageBox";
+import { useNavigate  } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-function CreateDiseaseForm(props) {
+function CreateDiseaseForm() {
   const [validated, setValidated] = useState(false);
   const createDisease = useSelector((state) => state.createPatientDisease);
   const { loading, response, error } = createDisease;
+  const params = useParams();
+  const { id } = params;
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -25,9 +30,8 @@ function CreateDiseaseForm(props) {
         name: form.elements.diseasename.value,
         stage: form.elements.stage.value,
       };
+      dispatch(patientDiseaseCreate(navigate,id,formData));
       setValidated(false);
-      await dispatch(patientDiseaseCreate(props.CNIC, formData));
-      props.handleDiseaseCreated();
     }
   };
 

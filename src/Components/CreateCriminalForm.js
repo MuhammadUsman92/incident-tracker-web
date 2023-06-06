@@ -9,12 +9,14 @@ import { createCriminal } from "../actions/criminalAction";
 import LoadingBox from "./LoadingBox";
 import MessageBox from "./MessageBox";
 import { getCoordinates } from "./GetLocation";
+import { useNavigate  } from 'react-router-dom';
 
 function CreateCriminalForm() {
   const [validated, setValidated] = useState(false);
   const criminalCreate = useSelector((state) => state.createCriminal);
-  const [cnic, setCNIC] = useState("");
   const { loading, response, error } = criminalCreate;
+  const [cnic, setCNIC] = useState("");
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleSubmit = async (event) => {
     const form = event.currentTarget;
@@ -29,6 +31,12 @@ function CreateCriminalForm() {
         name: form.elements.name.value,
         age: form.elements.age.value,
         gender: form.elements.gender.value,
+        location:{
+          street:form.elements.street.value,
+          city:form.elements.city.value, 
+          postal_code:form.elements.postal_code.value,
+          country:form.elements.country.value,
+        }
       };
 
       try {
@@ -39,15 +47,14 @@ function CreateCriminalForm() {
           postal_code,
           country
         );
-
         formData.location.latitude = latitude;
         formData.location.longitude = longitude;
-
         console.log(formData); // Form data including latitude and longitude
-        dispatch(createCriminal(formData));
+        dispatch(createCriminal(navigate,formData));
       } catch (error) {
         console.log(error.message);
         // Handle error
+        dispatch(createCriminal(navigate,formData))
       }
     }
 

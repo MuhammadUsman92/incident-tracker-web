@@ -5,17 +5,17 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { useDispatch, useSelector } from 'react-redux';
-import { patientDiseasesGet } from '../actions/patientActions';
+import { getCriminalDetails } from '../actions/criminalAction';
 import LoadingBox from './LoadingBox';
 import MessageBox from './MessageBox';
 import { useNavigate } from 'react-router-dom';
 
-function GetPatientForm() {
+function GetCriminalForm() {
   const [validated, setValidated] = useState(false);
   const [cnic, setCNIC] = useState('');
 
-  const getPatientDiseases = useSelector((state) => state.getPatientDiseases);
-  const { loading, response, error } = getPatientDiseases;
+  const CriminalDetails = useSelector((state) => state.getCriminalDetails);
+  const { loading, response, error } = CriminalDetails;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -42,7 +42,7 @@ function GetPatientForm() {
       setValidated(true);
     } else {
       event.preventDefault();
-      dispatch(patientDiseasesGet(navigate, cnic));
+      dispatch(getCriminalDetails(navigate, cnic));
     }
     setValidated(false);
   };
@@ -82,4 +82,4 @@ function GetPatientForm() {
   );
 }
 
-export default GetPatientForm;
+export default GetCriminalForm;

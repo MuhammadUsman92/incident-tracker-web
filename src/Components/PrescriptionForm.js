@@ -53,7 +53,7 @@ function PrescriptionForm(props) {
   return (
     <>
       <Row className="mb-3">
-        <Form.Group as={Col} controlId="prescriptionComments">
+        <Form.Group as={Col} md="8" controlId="prescriptionComments">
           <Form.Label>Comments</Form.Label>
           <Form.Control
             as="textarea"
@@ -63,15 +63,12 @@ function PrescriptionForm(props) {
               handlePrescriptionInputChange(event, "prescriptionComments")
             }
             required
-            isInvalid={!validation.prescriptionComments}
           />
           <Form.Control.Feedback type="invalid">
             Please enter comments.
           </Form.Control.Feedback>
         </Form.Group>
-      </Row>
-      <Row className="mb-3">
-        <Form.Group as={Col} md="6" controlId="prescriptionDateTime">
+        <Form.Group as={Col} md="4" controlId="prescriptionDateTime">
           <Form.Label>Date & Time</Form.Label>
           <Form.Control
             type="datetime-local"

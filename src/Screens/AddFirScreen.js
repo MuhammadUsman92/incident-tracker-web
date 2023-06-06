@@ -10,7 +10,7 @@ import { Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { createCrime } from "../actions/crimeActions";
 import { getCoordinates } from "../Components/GetLocation";
-
+import { useNavigate  } from 'react-router-dom';
 function AddFirScreen(props) {
   const [crimeData, setCrimeData] = useState("");
   const [firData, setFirData] = useState([]);
@@ -20,6 +20,7 @@ function AddFirScreen(props) {
   const [validationError, setValidationError] = useState(false);
   const crimeCreate = useSelector((state) => state.createCrime);
   const { loading, response, error } = crimeCreate;
+  const navigate=useNavigate();
   const [doctorNames, setDoctorNames] = useState(["khizar", "usman", "ibad"]);
 
   const dispatch = useDispatch();
@@ -119,11 +120,11 @@ function AddFirScreen(props) {
       formData.longitude = longitude;
 
       console.log(formData); // Form data including latitude and longitude
-      dispatch(createCrime(formData));
+      dispatch(createCrime(navigate,formData));
     } catch (error) {
       console.log(error.message);
       // Handle error
-      dispatch(createCrime(formData));
+      dispatch(createCrime(navigate,formData));
     }
     console.log(formData);
   };

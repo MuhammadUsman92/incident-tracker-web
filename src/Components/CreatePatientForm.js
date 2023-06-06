@@ -5,10 +5,11 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Row from "react-bootstrap/Row";
 import { useDispatch, useSelector } from "react-redux";
-import { doctorCreate } from "../actions/doctorActions";
+import { patientCreate } from "../actions/patientActions";
 import LoadingBox from "./LoadingBox";
 import MessageBox from "./MessageBox";
 import { getCoordinates } from "./GetLocation";
+import { useNavigate  } from 'react-router-dom';
 
 function CreatePatientForm() {
   const [validated, setValidated] = useState(false);
@@ -16,6 +17,7 @@ function CreatePatientForm() {
   const [cnic, setCNIC] = useState("");
   const { loading, response, error } = createPatient;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleSubmit = async (event) => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
@@ -26,11 +28,18 @@ function CreatePatientForm() {
       const formData = {
         cnic: form.elements.cnic.value,
         name: form.elements.name.value,
+        email: form.elements.email.value,
         age: form.elements.age.value,
         bloodGroup: form.elements.bloodGroup.value,
         gender: form.elements.gender.value,
         height: form.elements.height.value,
         weight: form.elements.weight.value,
+        location:{
+          street:form.elements.street.value,
+          city:form.elements.city.value, 
+          postal_code:form.elements.postal_code.value,
+          country:form.elements.country.value,
+        }
       };
 
       try {
@@ -45,10 +54,11 @@ function CreatePatientForm() {
         formData.location.latitude = latitude;
         formData.location.longitude = longitude;
 
-        console.log(formData); // Form data including latitude and longitude
-        dispatch(createPatient(formData));
+        console.log(formData); 
+        dispatch(patientCreate(navigate,formData));
       } catch (error) {
         console.log(error.message);
+        dispatch(patientCreate(navigate,formData));
         // Handle error
       }
     }
@@ -107,6 +117,18 @@ function CreatePatientForm() {
               Please enter Full Name.
             </Form.Control.Feedback>
           </Form.Group>
+          <Form.Group as={Col} md="3" controlId="email">
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              required
+              type="emial"
+              placeholder="Email"
+              defaultValue=""
+            />
+            <Form.Control.Feedback type="invalid">
+              Please enter email.
+            </Form.Control.Feedback>
+          </Form.Group>
           <Form.Group as={Col} md="3" controlId="age">
             <Form.Label>Age</Form.Label>
             <InputGroup hasValidation>
@@ -116,7 +138,28 @@ function CreatePatientForm() {
               </Form.Control.Feedback>
             </InputGroup>
           </Form.Group>
-
+          <Form.Group as={Col} md="3" controlId="height">
+            <Form.Label>Height</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              placeholder="Height"
+              defaultValue=""
+              pattern="[0-9]+(\.[0-9]{1,2})?" 
+            />
+            <Form.Control.Feedback type="invalid">
+              Please enter a valid height.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group as={Col} md="3" controlId="weight">
+            <Form.Label>Weight</Form.Label>
+            <InputGroup hasValidation>
+              <Form.Control type="text" placeholder="Weight" required />
+              <Form.Control.Feedback type="invalid">
+                Please enter Weight.
+              </Form.Control.Feedback>
+            </InputGroup>
+          </Form.Group>
           <Form.Group as={Col} md="3" controlId="gender">
             <Form.Label>Gender</Form.Label>
             <Form.Select
@@ -130,37 +173,23 @@ function CreatePatientForm() {
               <option value="OTHER">Other</option>
             </Form.Select>
           </Form.Group>
-        </Row>
-        <Row className="mb-3">
-          <Form.Group as={Col} md="4" controlId="height">
-            <Form.Label>Height</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              placeholder="Height"
-              defaultValue=""
-            />
-            <Form.Control.Feedback type="invalid">
-              Please enter Height.
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group as={Col} md="4" controlId="weight">
-            <Form.Label>Weight</Form.Label>
-            <InputGroup hasValidation>
-              <Form.Control type="text" placeholder="Weight" required />
-              <Form.Control.Feedback type="invalid">
-                Please enter Weight.
-              </Form.Control.Feedback>
-            </InputGroup>
-          </Form.Group>
-          <Form.Group as={Col} md="4" controlId="bloodGroup">
+          <Form.Group as={Col} md="3" controlId="bloodGroup">
             <Form.Label>Blood Group</Form.Label>
-            <InputGroup hasValidation>
-              <Form.Control type="text" placeholder="Blood Group" required />
-              <Form.Control.Feedback type="invalid">
-                Please enter Blood Group.
-              </Form.Control.Feedback>
-            </InputGroup>
+            <Form.Select
+              className="custom_form-select"
+              aria-label="Default select example"
+              required
+            >
+              <option value="">Select Blood Group</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+            </Form.Select>
           </Form.Group>
         </Row>
         <Row className="mb-2">
@@ -224,7 +253,7 @@ function CreatePatientForm() {
             feedbackType="invalid"
           />
         </Form.Group>
-        <Button type="submit">Create Criminal</Button>
+        <Button type="submit">Create Patient</Button>
       </Form>
     </>
   );

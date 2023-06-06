@@ -8,13 +8,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { createReport } from "../actions/reportActions";
 import LoadingBox from "./LoadingBox";
 import MessageBox from "./MessageBox";
+import { useNavigate,useParams  } from 'react-router-dom';
+
 
 function CreateReportForm() {
   const [validated, setValidated] = useState(false);
   const reportcreate = useSelector((state) => state.createReport);
   const { loading, response, error } = reportcreate;
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
+  const params = useParams();
+  const {id}=params;
   const [pdfFile, setPdfFile] = useState(null);
 
   const handlePdfUpload = (event) => {
@@ -29,7 +33,6 @@ function CreateReportForm() {
       setValidated(true);
     } else {
       event.preventDefault();
-      const prescriptionID = "123123";
       const formData = {
         collectDate: form.elements.collectDate.value,
         resultDate: form.elements.resultDate.value,
@@ -39,9 +42,7 @@ function CreateReportForm() {
       const laboratoryRegistrationNumber =
         form.elements.laboratoryRegistrationNumber.value;
 
-      dispatch(
-        createReport(laboratoryRegistrationNumber, prescriptionID, formData)
-      );
+      dispatch(createReport(navigate,id,laboratoryRegistrationNumber,formData));
 
       setValidated(false);
     }
@@ -93,20 +94,17 @@ function CreateReportForm() {
               Please enter result Date.
             </Form.Control.Feedback>
           </Form.Group>
-
-          <div className="col-md-3 mt-0">
-            <label className="form-label mb-1" htmlFor="file-upload">
-              Upload Document 1:
-            </label>
-            <input
-              id="file-upload1"
+          <Form.Group as={Col} md="3" controlId="reportImage">
+            <Form.Label>File</Form.Label>
+            <Form.Control
               type="file"
-              className="form-control"
+              defaultValue=""
               accept=".pdf"
               onChange={handlePdfUpload}
             />
-          </div>
-        </Row>
+          </Form.Group>
+
+         </Row> 
 
         <Form.Group className="mb-3">
           <Form.Check

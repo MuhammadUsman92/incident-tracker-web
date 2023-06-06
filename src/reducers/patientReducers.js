@@ -11,6 +11,9 @@ import {
   CREATE_PATIENT_PRESCRIPTION_REQUEST,
   CREATE_PATIENT_PRESCRIPTION_SUCCESS,
   CREATE_PATIENT_PRESCRIPTION_FAIL,
+  DISEASE_FETCH_REQUEST,
+  DISEASE_FETCH_SUCCESS,
+  DISEASE_FETCH_FAIL,
   } from '../constants/patientConstants';
 
 export const patientCreationReducer = (state = {}, action) => {
@@ -57,6 +60,18 @@ export const patientPrescriptionCreateReducer = (state = {}, action) => {
     case CREATE_PATIENT_PRESCRIPTION_SUCCESS:
       return { loading: false, response: action.payload };
     case CREATE_PATIENT_PRESCRIPTION_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+export const diseaseFetchReducer = (state = { disease: {} }, action) => {
+  switch (action.type) {
+    case DISEASE_FETCH_REQUEST:
+      return { loading: true, };
+    case DISEASE_FETCH_SUCCESS:
+      return { loading: false, response: action.payload };
+    case DISEASE_FETCH_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

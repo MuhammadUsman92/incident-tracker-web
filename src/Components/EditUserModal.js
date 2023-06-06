@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate  } from 'react-router-dom';
 
 import { editUserRole } from "../actions/editRoleActions";
 
@@ -19,6 +20,7 @@ function EditUserModal({ user, show, handleClose }) {
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
   const [roles, setRoles] = useState(user.roles);
+  const navigate=useNavigate();
   const [hospitalRegNo, setHospitalRegNo] = useState(
     user.roles.includes("HOSPITAL_ADMIN") ? user.hospitalRegNo || "" : ""
   );
@@ -29,28 +31,22 @@ function EditUserModal({ user, show, handleClose }) {
       alert("Name is required");
       return;
     }
-
     if (!email) {
       alert("Email is required");
       return;
     }
-
     // Perform save operation here or dispatch an action to update the user data
     console.log("Name:", name);
     console.log("Email:", email);
     console.log("Roles:", roles);
-
     const formData = {
       name: name,
       email: email,
       roles: roles,
       hospitalRegNo: hospitalRegNo,
     };
-
-    dispatch(editUserRole(formData));
-
+    dispatch(editUserRole(navigate,user.id,formData));
     console.log("Hospital Registration Number:", hospitalRegNo);
-
     handleClose();
   };
 
@@ -69,6 +65,7 @@ function EditUserModal({ user, show, handleClose }) {
         setHospitalRegNo("");
       }
     }
+    
   };
 
   return (

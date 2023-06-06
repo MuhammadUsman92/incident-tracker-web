@@ -1,4 +1,5 @@
 import { createStore, compose, applyMiddleware, combineReducers } from "redux";
+
 import thunk from "redux-thunk";
 import {
   userSigninReducer,
@@ -10,15 +11,17 @@ import {
   patientDiseasesGetReducer,
   patientDiseaseCreateReducer,
   patientPrescriptionCreateReducer,
+  diseaseFetchReducer
 } from "./reducers/patientReducers";
 import { hospitalCreationReducer } from "./reducers/hospitalReducers";
 import { laboratoryCreationReducer } from "./reducers/laboratoryReducers";
 import { doctorCreationReducer } from "./reducers/doctorReducers";
 
-import { criminalCreationReducer } from "./reducers/criminalReducers";
+import { criminalCreationReducer,criminalDetailsReducer } from "./reducers/criminalReducers";
 import { crimeCreationReducer } from "./reducers/crimeReducers";
 import { reportCreationReducer } from "./reducers/reportReducers";
 import { roleEditReducer } from "./reducers/editRoleReducers";
+
 
 const initialState = {
   userSignin: {
@@ -42,6 +45,8 @@ const reducer = combineReducers({
   createCrime: crimeCreationReducer,
   createReport: reportCreationReducer,
   editRole: roleEditReducer,
+  getCriminalDetails:criminalDetailsReducer,
+  diseaseDetails:diseaseFetchReducer,
 });
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
@@ -49,5 +54,6 @@ const store = createStore(
   initialState,
   composeEnhancer(applyMiddleware(thunk))
 );
+
 
 export default store;

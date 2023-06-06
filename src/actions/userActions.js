@@ -11,10 +11,12 @@ import {
   GET_ALL_USER_SUCCESS,
 } from '../constants/userConstants';
 
+export const SERVER_IP = "localhost:8080";
+
 export const register = (name, email, password) => async (dispatch) => {
   dispatch({ type: USER_REGISTER_REQUEST, payload: { email, password } });
   try {
-    const { data } = await Axios.post('/api/users/register', {
+    const { data } = await Axios.post(`http://${SERVER_IP}/authentication-service/api/v1/auth/register`, {
       name,
       email,
       password,
@@ -36,7 +38,7 @@ export const register = (name, email, password) => async (dispatch) => {
 export const signin = (email, password) => async (dispatch) => {
   dispatch({ type: USER_SIGNIN_REQUEST, payload: { email, password } });
   try {
-    const { data } = await Axios.post('/api/users/signin', { email, password });
+    const { data } = await Axios.post(`http://${SERVER_IP}/authentication-service/api/v1/auth/login`, { email, password });
     dispatch({ type: USER_SIGNIN_SUCCESS, payload: data });
     localStorage.setItem('userInfo', JSON.stringify(data));
   } catch (error) {
@@ -50,17 +52,23 @@ export const signin = (email, password) => async (dispatch) => {
   }
 };
 
-export const getAllUsers = () => async (dispatch) => {
+export const getAllUsers = (navigate) => async (dispatch,getState) => {
   dispatch({ type: GET_ALL_USER_REQUEST});
   try {
-    const { data } = await Axios.get('http://localhost:8080/authentication-service/user/',{
+    const {
+      userSignin: { userInfo },
+    } = getState();
+    const { data } = await Axios.get(`http://${SERVER_IP}/authentication-service/user/`,{
   headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJleHAiOjE2ODU4OTUyNTQsImlhdCI6MTY4NTg3NzI1NH0.1i6WWwwDHaI9QfPyKcJfx9KVrnyINV2NYYsT7UF1LzFDWbLtekAhZMbcRKut4MQWzuvaX4s6YRCJOEO5BOcE1g`,
+          Authorization: `Bearer ${userInfo.token}`,
         },
     });
-    console.log(data)
     dispatch({ type: GET_ALL_USER_SUCCESS, payload: data });
   } catch (error) {
+    console.log(error)
+    if (error.response && error.response.status === 401) {
+      navigate('/login-register');
+    }    
     dispatch({
       type: GET_ALL_USER_FAIL,
       payload:

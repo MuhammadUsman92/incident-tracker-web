@@ -17,9 +17,21 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    /* set the height of the container to the full viewport height */
+    height: 90vh;
 }
+.link-reset {
+  display: inline;
+  color: inherit;
+  text-decoration: none;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: none;
+}
+
 .loading {
     display: block !important;
     text-align: center;

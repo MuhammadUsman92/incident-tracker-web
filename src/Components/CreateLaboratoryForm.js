@@ -8,12 +8,14 @@ import { laboratoryCreate } from "../actions/laboratoryActions";
 import LoadingBox from "./LoadingBox";
 import MessageBox from "./MessageBox";
 import { getCoordinates } from "./GetLocation";
+import { useNavigate  } from 'react-router-dom';
 
 function CreateLaboratoryFrom() {
   const [validated, setValidated] = useState(false);
   const createLaboratory = useSelector((state) => state.createLaboratory);
   const { loading, response, error } = createLaboratory;
   const dispatch = useDispatch();
+  const navigate=useNavigate();
   const handleSubmit = async (event) => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
@@ -46,9 +48,10 @@ function CreateLaboratoryFrom() {
         formData.location.longitude = longitude;
 
         console.log(formData); // Form data including latitude and longitude
-        dispatch(laboratoryCreate(formData));
+        dispatch(laboratoryCreate(navigate,formData));
       } catch (error) {
         console.log(error.message);
+        dispatch(laboratoryCreate(navigate,formData))
         // Handle error
       }
       setValidated(false);

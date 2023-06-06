@@ -4,27 +4,29 @@ import "@trendmicro/react-sidenav/dist/react-sidenav.css";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import logo from "../Assets/logo.png";
-
-// import { useNavigate,useLocation  } from 'react-router-dom';
+import { useSelector } from "react-redux";
+import { useNavigate,useLocation  } from 'react-router-dom';
 
 function SideNavigation() {
-  //   const navigate = useNavigate(); // Use the useNavigate hook
-  //   const location = useLocation();
+    const navigate = useNavigate(); // Use the useNavigate hook
+    const location = useLocation();
   const [isOnPatientDetails, setIsOnPatientDetails] = useState(false);
-
-  //   useEffect(() => {
-  //     // Check if the user is on the '/patient-details' page
-  //     setIsOnPatientDetails(location.pathname === '/patient-details');
-  //   }, [location]);
+  const userSignin = useSelector((state) => state.userSignin);
+  const { userInfo }= userSignin;
+    useEffect(() => {
+      // Check if the user is on the '/patient-details' page
+      setIsOnPatientDetails(location.pathname === '/patient-details');
+    }, [location]);
   const handleNavigation = (selected) => {
-    //   if (isOnPatientDetails && selected === '/') {
-    //     // If the user is on the '/patient-details' page and selects '/'
-    //     // navigate back to the homepage
-    //     navigate('/');
-    //   } else {
-    //     // Navigate to other routes as usual
-    //     navigate(selected);
-    //   }
+      if (isOnPatientDetails && selected === '/') {
+        // If the user is on the '/patient-details' page and selects '/'
+        // navigate back to the homepage
+        navigate('/');
+      } else {
+        // Navigate to other routes as usual
+    navigate(selected);
+     
+      }
   };
 
   // Use media query to check screen size
@@ -62,7 +64,7 @@ function SideNavigation() {
         <NavItem eventKey="/">
           <NavIcon>
             <img
-              src={require("../images/get_patient.png")}
+              src={require("../images/create_patient.png")}
               alt="get_patient"
               style={{
                 padding: "2px",
@@ -71,27 +73,15 @@ function SideNavigation() {
               }}
             />
           </NavIcon>
-          <NavText>Get Patient Record</NavText>
+          {userInfo.data && userInfo.data.includes("ADMIN_USER")?<NavText>Get Record</NavText>:userInfo.data.includes("RESCUE_USER")?
+          <NavText>Get Patient Record</NavText>: <NavText>Get Criminal Record</NavText>}
+          
         </NavItem>
-        {/* <NavItem eventKey="/charts">
-          <NavIcon>
-            <i
-              className="fa fa-fw fa-line-chart"
-              style={{ fontSize: '1.75em' }}
-            />
-          </NavIcon>
-          <NavText>Charts</NavText>
-          <NavItem eventKey="/charts/linechart">
-            <NavText>Line Chart</NavText>
-          </NavItem>
-          <NavItem eventKey="/charts/barchart">
-            <NavText>Bar Chart</NavText>
-          </NavItem>
-        </NavItem> */}
+        {userInfo.data && userInfo.data.includes("HOSPITAL_ADMIN") &&
         <NavItem eventKey="/create-patient">
           <NavIcon>
             <img
-              src={require("../images/create_patient.png")}
+              src={require("../images/get_patient.png")}
               alt="create_patent"
               style={{
                 padding: "2px",
@@ -101,7 +91,8 @@ function SideNavigation() {
             />
           </NavIcon>
           <NavText>Create Patient</NavText>
-        </NavItem>
+        </NavItem>}
+        {userInfo.data && userInfo.data.includes("HOSPITAL_ADMIN") &&
         <NavItem eventKey="/create-doctor">
           <NavIcon>
             <img
@@ -115,7 +106,8 @@ function SideNavigation() {
             />
           </NavIcon>
           <NavText>Create Doctor</NavText>
-        </NavItem>
+        </NavItem>}
+        {userInfo.data && userInfo.data.includes("RESCUE_ADMIN") &&
         <NavItem eventKey="/create-hospital">
           <NavIcon>
             <img
@@ -129,7 +121,8 @@ function SideNavigation() {
             />
           </NavIcon>
           <NavText>Create Hospital</NavText>
-        </NavItem>
+        </NavItem>}
+        {userInfo.data && userInfo.data.includes("RESCUE_ADMIN") &&
         <NavItem eventKey="/create-laboratory">
           <NavIcon>
             <img
@@ -143,8 +136,9 @@ function SideNavigation() {
             />
           </NavIcon>
           <NavText>Create Laboratory</NavText>
-        </NavItem>
-        <NavItem eventKey="/create-crime">
+        </NavItem>}
+        {userInfo.data && userInfo.data.includes("POLICE_ADMIN") &&
+        <NavItem eventKey="/create-crime" >
           <NavIcon>
             <img
               src={require("../images/create_crime.png")}
@@ -157,8 +151,9 @@ function SideNavigation() {
             />
           </NavIcon>
           <NavText>Create Crime</NavText>
-        </NavItem>
-        <NavItem eventKey="/create-criminal">
+        </NavItem>}
+        {userInfo.data && userInfo.data.includes("POLICE_ADMIN") &&
+        <NavItem eventKey="/create-criminal" >
           <NavIcon>
             <img
               src={require("../images/create_criminal.png")}
@@ -171,22 +166,9 @@ function SideNavigation() {
             />
           </NavIcon>
           <NavText>Create Criminal</NavText>
-        </NavItem>
-        <NavItem eventKey="/create-fir">
-          <NavIcon>
-            <img
-              src={require("../images/create_fir.png")}
-              alt="create_fir"
-              style={{
-                padding: "2px",
-                width: "3em",
-                filter: "grayscale(100%) brightness(1000%)",
-              }}
-            />
-          </NavIcon>
-          <NavText>Create Fir</NavText>
-        </NavItem>
-        <NavItem eventKey="/all-users">
+        </NavItem>}
+        {userInfo.data && userInfo.data.includes("ADMIN_USER") &&
+        <NavItem eventKey="/all-users" >
           <NavIcon>
             <img
               src={require("../images/get_all_users.png")}
@@ -199,7 +181,7 @@ function SideNavigation() {
             />
           </NavIcon>
           <NavText>All Users</NavText>
-        </NavItem>
+        </NavItem>}
       </SideNav.Nav>
     </SideNav>
   );

@@ -1,18 +1,30 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const DiseaseCard = ({ disease }) => {
-  const handleAddPrescription = () => {
-    // Add your logic for adding a prescription here
-    console.log('Add prescription for', disease.name);
+  const navigate = useNavigate();
+  const userSignin = useSelector((state) => state.userSignin);
+  const { userInfo }= userSignin;
+  const handleClick = (key, event) => {
+    if (event) {
+      event.stopPropagation(); // Stop event propagation
+    }
+    if (key === 'add-prescription-btn') {
+      navigate(`/create-prescription/${disease.id}`);
+    } else {
+      navigate(`/disease-details/${disease.id}`);
+    }
   };
 
   return (
-    <div className="card disease-card">
+    <div className="card disease-card" onClick={() => handleClick('disease-card')}>
       <h3>{disease.name}</h3>
       <p>Stage: {disease.stage}</p>
-      <button onClick={handleAddPrescription} className="add-prescription-btn">
+      {userInfo.data && userInfo.data.includes("HOSPITAL_ADMIN") &&
+      <button onClick={(event) => handleClick('add-prescription-btn', event)} className="add-prescription-btn">
         Add Prescription
-      </button>
+      </button>}
     </div>
   );
 };

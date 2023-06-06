@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Axios from 'axios';
 import LabForm from "../Components/LabForm";
 import MedicinesForm from "../Components/MedicinesForm";
 import PrescriptionForm from "../Components/PrescriptionForm";
@@ -9,8 +10,11 @@ import { Helmet } from "react-helmet";
 import { Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { patientPrescriptionCreate } from "../actions/patientActions";
+import { useNavigate,useParams  } from 'react-router-dom';
+import { SERVER_IP } from "../actions/userActions";
 
-function AddPatientScreen(props) {
+
+function AddPatientScreen() {
   const [labData, setLabData] = useState([]);
   const [prescriptionData, setPrescriptionData] = useState("");
   const [medicinesData, setMedicinesData] = useState([]);
@@ -18,26 +22,33 @@ function AddPatientScreen(props) {
   const [errorMessagePrescription, setErrorMessagePrescription] = useState("");
   const [selectedDoctor, setSelectedDoctor] = useState("");
   const [validationError, setValidationError] = useState(false);
+  const params = useParams();
+  const userSignin = useSelector((state) => state.userSignin);
+  const { userInfo }= userSignin;
+  const { id }=params;
   const createPrescription = useSelector(
     (state) => state.createPatientPrescription
   );
   const { loading, response, error } = createPrescription;
-  const [doctorNames, setDoctorNames] = useState(["khizar", "usman", "ibad"]);
+  const [doctor, setDoctor] = useState(null);
+    const navigate=useNavigate();
 
-  // useEffect to fetch Doctors name for drop down
+  useEffect(() => {
+    const fetchDoctorNames = async () => {
+      try {
+        const { data } = await Axios.get(`http://${SERVER_IP}/health-service/doctor/hospital`,{
+          headers: {
+            Authorization: `Bearer ${userInfo.token}`,
+          },
+        });
+        setDoctor(data.data);
+      } catch (error) {
+        // Handle error
+      }
+    };
 
-  // useEffect(() => {
-  //   const fetchDoctorNames = async () => {
-  //     try {
-  //       const { data } = await Axios.get('http://your-api-url/doctor/names');
-  //       setDoctorNames(data.names);
-  //     } catch (error) {
-  //       // Handle error
-  //     }
-  //   };
-
-  //   fetchDoctorNames();
-  // }, []);
+    fetchDoctorNames();
+  }, []);
   const dispatch = useDispatch();
   const handleDoctorChange = (event) => {
     const selectedValue = event.target.value;
@@ -110,13 +121,8 @@ function AddPatientScreen(props) {
       comments: prescriptionData.prescriptionComments.trim(),
       medicineSet: mapMedicineData(medicinesData),
     };
-
-    console.log(labData);
-    console.log(formData);
-    console.log(selectedDoctor);
-
     dispatch(
-      patientPrescriptionCreate(props.DiseaseId, selectedDoctor, formData)
+      patientPrescriptionCreate(navigate,id,selectedDoctor, formData)
     );
   };
 
@@ -201,9 +207,9 @@ function AddPatientScreen(props) {
                   style={{ maxHeight: "200px", overflowY: "auto" }} // Make dropdown scrollable
                 >
                   <option value="">Please select the doctor</option>
-                  {doctorNames.map((doctorName) => (
-                    <option key={doctorName} value={doctorName}>
-                      {doctorName}
+                  {doctor?.map((doctor) => (
+                    <option key={doctor.pmdc} value={doctor.pmdc}>
+                      {doctor.name}
                     </option>
                   ))}
                 </Form.Select>

@@ -3,7 +3,7 @@ import React from 'react';
 const PatientDetails = ({ patient }) => {
   return (
     <div className="header">
-      <h2>{patient.name}</h2>
+      <h4>{patient.name}</h4>
       <p>Age: {patient.age}</p>
       <p>Gender: {patient.gender}</p>
       <p>Height: {patient.height}</p>

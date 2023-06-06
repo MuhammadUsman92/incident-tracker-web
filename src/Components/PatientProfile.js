@@ -1,10 +1,24 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PatientDetails from './PatientDetails';
 import DiseaseCard from './DiseaseCard';
 import DoctorCard from './DoctorCard';
 import HospitalCard from './HospitalCard';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import LoadingBox from './LoadingBox';
+import MessageBox from './MessageBox';
+import { useParams } from 'react-router-dom';
+import { patientDiseasesGet } from '../actions/patientActions';
 
 const PatientProfile = () => {
+  const navigate=useNavigate();
+  const getPatientDiseases = useSelector((state) => state.getPatientDiseases);
+  const { loading, response, error } = getPatientDiseases;
+  const userSignin = useSelector((state) => state.userSignin);
+  const { userInfo }= userSignin;
+  const params = useParams();
+  const { id } = params; 
+  const dispatch=useDispatch();
     const patient={
         "name": "عثمان",
         "email": null,
@@ -89,37 +103,46 @@ const PatientProfile = () => {
         ],
         "cnic": "33333-3333333-1"
       }
-      const handleCreateDisease = () => {
-        // Add your logic for creating a new disease here
-        console.log('Create new disease');
-      };
+    const handleCreateDisease = () => {
+      navigate(`/create-disease/${id}`)
+    };
+    useEffect(() => {
+      dispatch(patientDiseasesGet(navigate, id));
+    }, []); // Empty dependency array to trigger the effect only on component render
+  
 return (
-    <div className="patient-profile">
-    <PatientDetails patient={patient} />
-    <div className="cards-container">
-        <h3>Diseases:</h3>
-        <div className="disease-cards">
-        {patient.diseaseSet.map((disease) => (
-            <DiseaseCard key={disease.id} disease={disease} />
-        ))}
-        <button onClick={handleCreateDisease} className="create-disease-btn">
-            Create Disease
-        </button>
+  <>
+  {loading && <LoadingBox />}
+      {error && <MessageBox variant="danger">{error}</MessageBox>}
+      {response && <div className="patient-profile">
+        <PatientDetails patient={response.data} />
+        <div className="cards-container">
+            <h3>Diseases:</h3>
+            <div className="disease-cards">
+            {response.data.diseaseSet.map((disease) => (
+                <DiseaseCard key={disease.id} disease={disease} />
+            ))}
+            {userInfo.data && userInfo.data.includes("HOSPITAL_ADMIN") &&
+            <button onClick={handleCreateDisease} className="create-disease-btn">
+                Create Disease
+            </button>}
+            </div>
+            <h3>Doctors:</h3>
+            <div className="doctor-cards">
+            {response.data.doctorSet.map((doctor) => (
+                <DoctorCard key={doctor.pmdc} doctor={doctor} />
+            ))}
+            </div>
+            <h3>Hospitals:</h3>
+            <div className="hospital-cards">
+            {response.data.hospitalSet.map((hospital) => (
+                <HospitalCard key={hospital.reg_no} hospital={hospital} />
+            ))}
+            </div>
         </div>
-        <h3>Doctors:</h3>
-        <div className="doctor-cards">
-        {patient.doctorSet.map((doctor) => (
-            <DoctorCard key={doctor.pmdc} doctor={doctor} />
-        ))}
-        </div>
-        <h3>Hospitals:</h3>
-        <div className="hospital-cards">
-        {patient.hospitalSet.map((hospital) => (
-            <HospitalCard key={hospital.reg_no} hospital={hospital} />
-        ))}
-        </div>
-    </div>
-    </div>
+      </div>}
+  </>
+    
 );
 };
 

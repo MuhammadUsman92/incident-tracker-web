@@ -6,23 +6,28 @@ import { getAllUsers } from "../actions/userActions";
 import LoadingBox from "../Components/LoadingBox";
 import MessageBox from "../Components/MessageBox";
 import EditUserModal from "../Components/EditUserModal";
+import { useNavigate  } from 'react-router-dom';
+
 
 function UsersListScreen() {
   const getUsers = useSelector((state) => state.getUsersAll);
   const { loading, response, error } = getUsers;
   const dispatch = useDispatch();
-
+  const navigate = useNavigate(); // Use the useNavigate hook
   const [show, setShow] = useState(false);
   const [userToEdit, setUserToEdit] = useState(null);
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false);
+    setUserToEdit(null);
+  }
   const handleShow = (user) => {
-    setUserToEdit(user);
     setShow(true);
+    setUserToEdit(user);
   };
 
   useEffect(() => {
-    dispatch(getAllUsers());
+    dispatch(getAllUsers(navigate));
   }, [dispatch]);
 
   return (
@@ -41,8 +46,8 @@ function UsersListScreen() {
                   <th className="p-0">ID</th>
                   <th className="p-0 col-width">Name</th>
                   <th className="p-0 col-width">Email</th>
-                  <th className="p-0">ROLE_ADMIN</th>
-                  <th className="p-0">ROLE_NORMAL</th>
+                  <th className="p-0">ADMIN_USER</th>
+                  <th className="p-0">NORMAL_USER</th>
                   <th className="p-0">RESCUE_USER</th>
                   <th className="p-0">RESCUE_ADMIN</th>
                   <th className="p-0">HOSPITAL_ADMIN</th>
@@ -58,12 +63,12 @@ function UsersListScreen() {
                     <td className="p-0 col-width">{user.name}</td>
                     <td className="p-0 col-width">{user.email}</td>
                     <td className="p-0">
-                      {user.roles.some((role) => role.name === "ROLE_ADMIN")
+                      {user.roles.some((role) => role.name === "ADMIN_USER")
                         ? "✅"
                         : "❎"}
                     </td>
                     <td className="p-0">
-                      {user.roles.some((role) => role.name === "ROLE_NORMAL")
+                      {user.roles.some((role) => role.name === "NORMAL_USER")
                         ? "✅"
                         : "❎"}
                     </td>
