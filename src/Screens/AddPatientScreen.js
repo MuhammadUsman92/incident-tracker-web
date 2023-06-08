@@ -25,7 +25,7 @@ function AddPatientScreen() {
   const params = useParams();
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo }= userSignin;
-  const { id }=params;
+  const { diseaseId }=params;
   const createPrescription = useSelector(
     (state) => state.createPatientPrescription
   );
@@ -121,9 +121,7 @@ function AddPatientScreen() {
       comments: prescriptionData.prescriptionComments.trim(),
       medicineSet: mapMedicineData(medicinesData),
     };
-    dispatch(
-      patientPrescriptionCreate(navigate,id,selectedDoctor, formData)
-    );
+    dispatch(patientPrescriptionCreate(navigate,diseaseId,selectedDoctor, formData));
   };
 
   return (

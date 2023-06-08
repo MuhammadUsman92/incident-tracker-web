@@ -11,9 +11,9 @@ const DiseaseCard = ({ disease }) => {
       event.stopPropagation(); // Stop event propagation
     }
     if (key === 'add-prescription-btn') {
-      navigate(`/create-prescription/${disease.id}`);
+      navigate(`disease-details/${disease.id}/create-prescription`);
     } else {
-      navigate(`/disease-details/${disease.id}`);
+      navigate(`disease-details/${disease.id}`);
     }
   };
 

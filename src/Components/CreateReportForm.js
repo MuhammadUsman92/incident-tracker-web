@@ -18,7 +18,7 @@ function CreateReportForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const params = useParams();
-  const {id}=params;
+  const {prescriptionId}=params;
   const [pdfFile, setPdfFile] = useState(null);
 
   const handlePdfUpload = (event) => {
@@ -42,7 +42,7 @@ function CreateReportForm() {
       const laboratoryRegistrationNumber =
         form.elements.laboratoryRegistrationNumber.value;
 
-      dispatch(createReport(navigate,id,laboratoryRegistrationNumber,formData));
+      dispatch(createReport(navigate,prescriptionId,laboratoryRegistrationNumber,formData));
 
       setValidated(false);
     }

@@ -17,7 +17,7 @@ const PatientProfile = () => {
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo }= userSignin;
   const params = useParams();
-  const { id } = params; 
+  const { patientId } = params; 
   const dispatch=useDispatch();
     const patient={
         "name": "عثمان",
@@ -104,10 +104,10 @@ const PatientProfile = () => {
         "cnic": "33333-3333333-1"
       }
     const handleCreateDisease = () => {
-      navigate(`/create-disease/${id}`)
+      navigate(`create-disease`)
     };
     useEffect(() => {
-      dispatch(patientDiseasesGet(navigate, id));
+      dispatch(patientDiseasesGet(navigate, patientId));
     }, []); // Empty dependency array to trigger the effect only on component render
   
 return (
@@ -145,8 +145,5 @@ return (
     
 );
 };
-
-      
-    
 
 export default PatientProfile;

@@ -11,10 +11,10 @@ const DiseaseDetails = () => {
   const diseaseDetails = useSelector((state) => state.diseaseDetails);
   const { loading, response, error } = diseaseDetails;
   const params = useParams();
-  const { id } = params; 
+  const { diseaseId } = params; 
   const dispatch=useDispatch();
   useEffect(() => {
-    dispatch(fetchDiseaseById(navigate, id));
+    dispatch(fetchDiseaseById(navigate, diseaseId));
   }, []);
    const disease = {
         "name": "Diabetes",
@@ -59,6 +59,9 @@ const DiseaseDetails = () => {
         }
         ]
         }
+   const handleClick = ( ) => {
+      navigate(`create-prescription`)
+    }
   return (
 
       <>
@@ -68,6 +71,9 @@ const DiseaseDetails = () => {
         <div className="disease-details">
           <h2>{response.data.name}</h2>
           <p>Stage: {response.data.stage}</p>
+          <button onClick={handleClick} className="add-prescription-btn">
+            Add Prescription
+          </button>
           <h3>Prescriptions:</h3>
           <div className="prescription-cards">
           {response.data.prescriptionDtoSet?.map((prescription) => (

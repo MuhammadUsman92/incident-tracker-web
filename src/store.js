@@ -17,8 +17,9 @@ import { hospitalCreationReducer } from "./reducers/hospitalReducers";
 import { laboratoryCreationReducer } from "./reducers/laboratoryReducers";
 import { doctorCreationReducer } from "./reducers/doctorReducers";
 
-import { criminalCreationReducer,criminalDetailsReducer } from "./reducers/criminalReducers";
-import { crimeCreationReducer } from "./reducers/crimeReducers";
+import { criminalCreationReducer,criminalDetailsReducer,
+  createCriminalStatusReducer } from "./reducers/criminalReducers";
+import { crimeCreationReducer,crimeGetReducer } from "./reducers/crimeReducers";
 import { reportCreationReducer } from "./reducers/reportReducers";
 import { roleEditReducer } from "./reducers/editRoleReducers";
 
@@ -47,6 +48,8 @@ const reducer = combineReducers({
   editRole: roleEditReducer,
   getCriminalDetails:criminalDetailsReducer,
   diseaseDetails:diseaseFetchReducer,
+  crimeDetails:crimeGetReducer,
+  criminalStatusCreate:createCriminalStatusReducer,
 });
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(

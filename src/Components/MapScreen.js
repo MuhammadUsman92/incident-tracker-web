@@ -5,7 +5,7 @@ import PlacesAutocomplete, {
   getLatLng,
 } from "react-places-autocomplete";
 
-const Map = () => {
+const MapScreen = () => {
   const [circlePosition, setCirclePosition] = useState({
     lat: 51.505,
     lng: -0.09,
@@ -17,18 +17,22 @@ const Map = () => {
   const [address, setAddress] = useState("");
 
   const mapContainerStyle = {
-    height: "100vh", // Adjusted the height to 100%
+    height: "90vh", // Adjusted the height to 100%
     width: "100%",
   };
 
   const searchInputStyle = {
-    width: "300px", // Increase the width of the search bar as desired
+    // display:"flex"
+    width: "60%", // Increase the width of the search bar as desired
+    
+    textAlign:'center',
   };
 
   const searchOptionsStyle = {
     backgroundColor: "white", // Set the desired background color for the options list
-    width: "300px", // Set the width equal to the search bar width
+    width: "60%", // Set the width equal to the search bar width
     cursor: "pointer", // Change the mouse pointer when hovering over an option
+    textAlign: "center", 
   };
 
   const onLoad = (map) => {
@@ -128,14 +132,14 @@ const Map = () => {
   };
 
   return (
-    <div style={{ position: "relative", height: "100%", width: "100%" }}>
+    <div style={{ position: "relative", width: "100%" }}>
       <div
         style={{
           position: "absolute",
-          top: 10,
-          marginLeft: "40%",
+          top: '20px',
           zIndex: 1,
-          width: "60%",
+          alignContent:'center',
+          width: "100%",
         }}
       >
         <PlacesAutocomplete
@@ -149,7 +153,10 @@ const Map = () => {
             getSuggestionItemProps,
             loading,
           }) => (
-            <div>
+            <div style={{
+              textAlign:'center',
+            }}
+             >
               <input
                 {...getInputProps({
                   placeholder: "Search Location...",
@@ -158,8 +165,8 @@ const Map = () => {
                 })}
               />
               <div
-                className="autocomplete-dropdown-container"
-                style={searchOptionsStyle} // Apply the updated searchOptionsStyle
+                className="autocomplete-dropdown-container search-suggestions"
+                // style={searchOptionsStyle} // Apply the updated searchOptionsStyle
               >
                 {loading && <div>Loading...</div>}
                 {suggestions.map((suggestion) => {
@@ -190,4 +197,4 @@ const Map = () => {
   );
 };
 
-export default Map;
+export default MapScreen;

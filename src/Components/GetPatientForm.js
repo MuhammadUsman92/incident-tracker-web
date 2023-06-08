@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 function GetPatientForm() {
   const [validated, setValidated] = useState(false);
   const [cnic, setCNIC] = useState('');
+  const [nextPress,setNextPress]= useState(false);
 
   const getPatientDiseases = useSelector((state) => state.getPatientDiseases);
   const { loading, response, error } = getPatientDiseases;
@@ -48,17 +49,18 @@ function GetPatientForm() {
   };
 
   useEffect(() => {
-    if (response && response.status === 'OK') {
+    if (nextPress && !loading && response && response.status === 'OK') {
+      setNextPress(false);
       navigate(`/patient-details/${cnic}`);
     }
-  }, [response, navigate]);
+  }, [loading]);
 
   return (
     <>
       {loading && <LoadingBox />}
       {error && <MessageBox variant="danger">{error}</MessageBox>}
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
-        <h5 className="head-div text-center">Patient Diseases Record</h5>
+        <h5 className="head-div text-center">Patient Record</h5>
         <Row className="mb-3 justify-content-center">
           <Form.Group as={Col} md="5" controlId="cnic">
             <Form.Label>CNIC</Form.Label>
@@ -70,7 +72,7 @@ function GetPatientForm() {
                 value={cnic}
                 onChange={handleChangeCNIC}
               />
-              <Button type="submit">Get Record</Button>
+              <Button type="submit" onClick={()=>setNextPress(true)}>Get Record</Button>
             </InputGroup>
             <Form.Control.Feedback type="invalid">
               Invalid CNIC no.(XXXXX-XXXXXXX-X).

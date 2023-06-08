@@ -15,7 +15,7 @@ function CreateDiseaseForm() {
   const createDisease = useSelector((state) => state.createPatientDisease);
   const { loading, response, error } = createDisease;
   const params = useParams();
-  const { id } = params;
+  const { patientId } = params;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleSubmit = (event) => {
@@ -30,7 +30,7 @@ function CreateDiseaseForm() {
         name: form.elements.diseasename.value,
         stage: form.elements.stage.value,
       };
-      dispatch(patientDiseaseCreate(navigate,id,formData));
+      dispatch(patientDiseaseCreate(navigate,patientId,formData));
       setValidated(false);
     }
   };

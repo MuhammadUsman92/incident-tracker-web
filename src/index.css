@@ -31,6 +31,12 @@ body {
   cursor: pointer;
   outline: none;
 }
+.search-suggestions {
+  display: flex;
+  justify-content: center;
+  background-color: #ffffffd3;
+  flex-direction: column;
+}
 
 .loading {
     display: block !important;

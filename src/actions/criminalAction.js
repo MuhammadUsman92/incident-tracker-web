@@ -6,6 +6,9 @@ import {
   CRIMINAL_DETAILS_REQUEST,
   CRIMINAL_DETAILS_SUCCESS,
   CRIMINAL_DETAILS_FAIL,
+  CREATE_CRIMINAL_STATUS_REQUEST,
+  CREATE_CRIMINAL_STATUS_SUCCESS,
+  CREATE_CRIMINAL_STATUS_FAIL,
 } from "../constants/criminalConstants";
 import { SERVER_IP } from "./userActions";
 
@@ -15,7 +18,7 @@ export const createCriminal = (navigate,criminal) => async (dispatch, getState) 
     const {
       userSignin: { userInfo },
     } = getState();
-    const { data } = await Axios.post(`http://${SERVER_IP}/criminal-service/criminals/`,criminal,{
+    const { data } = await Axios.post(`http://${SERVER_IP}/criminal-service/criminal/`,criminal,{
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
       },
@@ -44,7 +47,7 @@ export const getCriminalDetails = (navigate,criminalId) => async (dispatch, getS
       userSignin: { userInfo },
     } = getState();
     const { data } = await Axios.get(
-      `http://${SERVER_IP}/criminal-service/criminals/${criminalId}`,
+      `http://${SERVER_IP}/criminal-service/criminal/${criminalId}`,
       {
         headers: {
           Authorization: `Bearer ${userInfo.token}`,
@@ -66,3 +69,26 @@ export const getCriminalDetails = (navigate,criminalId) => async (dispatch, getS
   }
 };
 
+export const createCriminalStatus = (navigate,criminalId,crimeId,status) => async (dispatch,getState) => {
+  dispatch({ type: CREATE_CRIMINAL_STATUS_REQUEST, payload: status });
+  try {
+    const {
+      userSignin: { userInfo },
+    } = getState();
+    const { data } = await Axios.post(`http://${SERVER_IP}/criminal-service/criminal-status/criminalId/${criminalId}/crimeId/${crimeId}`,status,{
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+    );
+    dispatch({ type: CREATE_CRIMINAL_STATUS_SUCCESS, payload: data.message });
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      navigate('/login-register');
+    }
+    dispatch({
+      type: CREATE_CRIMINAL_STATUS_FAIL,
+      payload: error.message,
+    });
+  }
+};

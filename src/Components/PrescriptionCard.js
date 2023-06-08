@@ -7,15 +7,27 @@ import { useSelector } from 'react-redux';
 
 
 const PrescriptionCard = ({ prescription }) => {
-    const navigate = useNavigate();
-    const handleClick = ( ) => {
-        navigate(`/add-report/${prescription.id}`)
-    }
-    const userSignin = useSelector((state) => state.userSignin);
+  const navigate = useNavigate();
+  const handleClick = ( ) => {
+      navigate(`add-report/${prescription.id}`)
+  }
+  const userSignin = useSelector((state) => state.userSignin);
   const { userInfo }= userSignin;
+  function formatDateTime(dateTimeString) {
+    const dateTime = new Date(dateTimeString);
+    const options = {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true
+    };
+    return dateTime.toLocaleString("en-US", options);
+  }
 return (
 <div className="card prescription-card">
-<h3>Prescription Date: {prescription.date}</h3>
+<h3>Date: {formatDateTime(prescription.date)}</h3>
 <p>Recover: {prescription.recover ? 'Yes' : 'No'}</p>
 <p>Comments: {prescription.comments}</p>
 <Row>

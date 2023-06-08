@@ -16,19 +16,12 @@ function AddFirScreen(props) {
   const [firData, setFirData] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [errorMessageCrime, setErrorMessageCrime] = useState("");
-  const [selectedDoctor, setSelectedDoctor] = useState("");
-  const [validationError, setValidationError] = useState(false);
   const crimeCreate = useSelector((state) => state.createCrime);
   const { loading, response, error } = crimeCreate;
   const navigate=useNavigate();
-  const [doctorNames, setDoctorNames] = useState(["khizar", "usman", "ibad"]);
 
   const dispatch = useDispatch();
-  const handleDoctorChange = (event) => {
-    const selectedValue = event.target.value;
-    setSelectedDoctor(selectedValue);
-    setValidationError(selectedValue === "");
-  };
+  
   const mapFirData = (firData) => {
     return firData.map((fir) => {
       const {
@@ -37,7 +30,6 @@ function AddFirScreen(props) {
         complainantDate,
         complainantCategory,
         assignedOfficerName,
-        status,
         incidentReport,
         contactNum,
         officerCell,
@@ -50,7 +42,6 @@ function AddFirScreen(props) {
         complainantDate: complainantDate,
         complainantCategory: complainantCategory,
         assignedOfficerName: assignedOfficerName,
-        status: status,
         incidentReport: incidentReport,
         contactNum: contactNum,
         officerCell: officerCell,
@@ -101,23 +92,26 @@ function AddFirScreen(props) {
     // Proceed with form submission
     const formData = {
       type: crimeData.type,
+      incidentDateTime:crimeData.incidentDateTime,
+      incidentLocation:{
       street: crimeData.street,
       city: crimeData.city,
       postal_code: crimeData.postal_code,
       country: crimeData.country,
+      },
       firSet: mapFirData(firData),
     };
 
     try {
       const { latitude, longitude } = await getCoordinates(
-        formData.street,
-        formData.city,
-        formData.postal_code,
-        formData.country
+        formData.incidentLocation.street,
+        formData.incidentLocation.city,
+        formData.incidentLocation.postal_code,
+        formData.incidentLocation.country
       );
 
-      formData.latitude = latitude;
-      formData.longitude = longitude;
+      formData.incidentLocation.latitude = latitude;
+      formData.incidentLocation.longitude = longitude;
 
       console.log(formData); // Form data including latitude and longitude
       dispatch(createCrime(navigate,formData));

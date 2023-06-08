@@ -1,4 +1,10 @@
-import React from 'react';
+import React,{useEffect} from 'react';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCrimeById } from '../actions/crimeActions';
+import LoadingBox from './LoadingBox';
+import MessageBox from './MessageBox';
+import { useNavigate } from 'react-router-dom';
 
 const CrimeDetails = () => {
     const data ={
@@ -66,31 +72,61 @@ const CrimeDetails = () => {
             }
         ]
     }
+    const crimeDetails = useSelector((state) => state.crimeDetails);
+    const { loading, response, error } = crimeDetails;
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const params = useParams();
+    const { id } = params; 
   const { incidentLocation, incidentDate, type, firSet, criminalDtos } = data;
-
+  function formatDateTime(dateTimeString) {
+    const dateTime = new Date(dateTimeString);
+    const options = {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true
+    };
+    return dateTime.toLocaleString("en-US", options);
+    }
+  useEffect(() => {
+    dispatch(getCrimeById(navigate, id));
+  }, []);
   return (
+    <>
+    {loading && <LoadingBox />}
+    {error && <MessageBox variant="danger">{error}</MessageBox>}
+  {response &&
     <div className="crime-card">
       <h2 className="crime-header">Crime Details</h2>
       <div className="header">
-      <p>Type: {type}</p>
-      <p>Incident Date: {incidentDate}</p>
+      <p>Type: {response.data.type}</p>
+      <p>Incident Date: {response.data.incidentDate?formatDateTime(response.data.incidentDate):'N/A'}</p>
       <p>
-        Location: {incidentLocation.street}, {incidentLocation.city}, {incidentLocation.postal_code}, {incidentLocation.country}
+        Location: {response.data.incidentLocation.street}, {response.data.incidentLocation.city}, {response.data.incidentLocation.country}
       </p>
     </div>
       <h3 className="fir-header">First Information Report</h3>
       <section className="fir-section">
-        {firSet.map((fir) => (
+        {response.data.firSet?.map((fir) => (
           <div className="fir-card" key={fir.id}>
-            <h4 className="fir-title">{fir.policeStationName}</h4>
-            <p className="fir-description">{fir.incidentReport}</p>
+            <h4 className="fir-title">{`Police Station: ${fir.policeStationName}`}</h4>
+            <p className="fir-description">{`Complainant: ${fir.complainantName}`}</p>
+            <p className="fir-description">{`Contact Num: ${fir.contactNum}`}</p>
+            <p className="fir-description">{`Date: ${fir.complainantDate?formatDateTime(fir.complainantDate):'N/A'}`}</p>
+            <p className="fir-description">{`Category: ${fir.complainantCategory}`}</p>
+            <p className="fir-description">{`Officer Name: ${fir.assignedOfficerName}`}</p>
+            <p className="fir-description">{`Officer Cell: ${fir.officerCell}`}</p>
+            <p className="fir-description">{`Report: ${fir.incidentReport}`}</p>
             <p className="fir-status">{fir.status}</p>
           </div>
         ))}
       </section>
       <h3 className="criminal-header">Criminal Details</h3>
       <section className="criminal-section">
-        {criminalDtos.map((criminal) => (
+        {response.data.criminal?.map((criminal) => (
           <div className="criminal-card" key={criminal.cnic}>
             <h4 className="criminal-title">{criminal.name}</h4>
             <p className="criminal-description">{`CNIC: ${criminal.cnic}`}</p>
@@ -99,7 +135,8 @@ const CrimeDetails = () => {
           </div>
         ))}
       </section>
-    </div>
+    </div>}
+    </>
   );
 };
 

@@ -5,6 +5,9 @@ import {
     CRIMINAL_DETAILS_REQUEST,
     CRIMINAL_DETAILS_SUCCESS,
     CRIMINAL_DETAILS_FAIL,
+    CREATE_CRIMINAL_STATUS_REQUEST,
+    CREATE_CRIMINAL_STATUS_SUCCESS,
+    CREATE_CRIMINAL_STATUS_FAIL,
 } from '../constants/criminalConstants';
 
 export const criminalCreationReducer = (state = {}, action) => {
@@ -21,15 +24,12 @@ export const criminalCreationReducer = (state = {}, action) => {
 };
 
   
-  export const criminalDetailsReducer = (
-    state = { loading: true, criminal: {} },
-    action
-  ) => {
+  export const criminalDetailsReducer = (state = {},action) => {
     switch (action.type) {
       case CRIMINAL_DETAILS_REQUEST:
-        return { loading: true, criminal: {} };
+        return { loading: true, };
       case CRIMINAL_DETAILS_SUCCESS:
-        return { loading: false, criminal: action.payload };
+        return { loading: false, response: action.payload };
       case CRIMINAL_DETAILS_FAIL:
         return { loading: false, error: action.payload };
       default:
@@ -37,3 +37,15 @@ export const criminalCreationReducer = (state = {}, action) => {
     }
   };
   
+  export const createCriminalStatusReducer = (state = {}, action) => {
+    switch (action.type) {
+      case CREATE_CRIMINAL_STATUS_REQUEST:
+        return { loading: true, };
+      case CREATE_CRIMINAL_STATUS_SUCCESS:
+        return { loading: false, response:  action.payload };
+      case CREATE_CRIMINAL_STATUS_FAIL:
+        return { loading: false, error: action.payload };
+      default:
+        return state;
+    }
+  };

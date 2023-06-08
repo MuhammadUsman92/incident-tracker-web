@@ -132,7 +132,6 @@ export const fetchDiseaseById = (navigate,diseaseId) => async (dispatch,getState
       },
     });
     dispatch({ type: DISEASE_FETCH_SUCCESS, payload: data });
-    console.log(data)
   } catch (error) {
     if (error.response && error.response.status === 401) {
       navigate('/login-register');
