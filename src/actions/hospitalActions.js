@@ -4,7 +4,7 @@ import {
     HOSPITAL_CREATION_SUCCESS,
     HOSPITAL_CREATION_FAIL,
 } from '../constants/hospitalConstants';
-import { SERVER_IP } from "./userActions";
+import { SERVER_IP,signout } from "./userActions";
 
 
 export const hospitalCreate = (navigate,hospital) => async (dispatch, getState) => {
@@ -21,8 +21,8 @@ export const hospitalCreate = (navigate,hospital) => async (dispatch, getState) 
         dispatch({ type: HOSPITAL_CREATION_SUCCESS, payload: data.message });
     } catch (error) {
         if (error.response && error.response.status === 401) {
-            navigate('/login-register');
-          }
+            dispatch(signout(navigate)); 
+        }
         dispatch({
             type: HOSPITAL_CREATION_FAIL,
             payload:

@@ -10,7 +10,7 @@ import {
   CREATE_CRIMINAL_STATUS_SUCCESS,
   CREATE_CRIMINAL_STATUS_FAIL,
 } from "../constants/criminalConstants";
-import { SERVER_IP } from "./userActions";
+import { SERVER_IP,signout } from "./userActions";
 
 export const createCriminal = (navigate,criminal) => async (dispatch, getState) => {
   dispatch({ type: CRIMINAL_CREATION_REQUEST, payload: criminal });
@@ -27,7 +27,7 @@ export const createCriminal = (navigate,criminal) => async (dispatch, getState) 
     dispatch({ type: CRIMINAL_CREATION_SUCCESS, payload: data.message });
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      navigate('/login-register');
+      dispatch(signout(navigate));
     }
     dispatch({
       type: CRIMINAL_CREATION_FAIL,
@@ -57,7 +57,7 @@ export const getCriminalDetails = (navigate,criminalId) => async (dispatch, getS
     dispatch({ type: CRIMINAL_DETAILS_SUCCESS, payload: data });
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      navigate("/login-register");
+      dispatch(signout(navigate));
     }
     dispatch({
       type: CRIMINAL_DETAILS_FAIL,
@@ -84,7 +84,7 @@ export const createCriminalStatus = (navigate,criminalId,crimeId,status) => asyn
     dispatch({ type: CREATE_CRIMINAL_STATUS_SUCCESS, payload: data.message });
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      navigate('/login-register');
+      dispatch(signout(navigate));
     }
     dispatch({
       type: CREATE_CRIMINAL_STATUS_FAIL,

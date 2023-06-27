@@ -16,7 +16,7 @@ import {
   DISEASE_FETCH_SUCCESS,
   DISEASE_FETCH_FAIL,
   } from '../constants/patientConstants';
-  import { SERVER_IP } from "./userActions";
+  import { SERVER_IP,signout } from "./userActions";
 
 export const patientCreate = (navigate,patient) => async (dispatch, getState) => {
     dispatch({ type: PATIENT_CREATION_REQUEST, payload: patient });
@@ -32,7 +32,7 @@ export const patientCreate = (navigate,patient) => async (dispatch, getState) =>
       dispatch({ type: PATIENT_CREATION_SUCCESS, payload: data.message });
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        navigate('/login-register');
+        dispatch(signout(navigate)); 
       }
       dispatch({
         type: PATIENT_CREATION_FAIL,
@@ -58,7 +58,7 @@ export const patientDiseasesGet = (navigate,patientCNIC) => async (dispatch, get
     dispatch({ type: GET_PATIENT_DISEASES_SUCCESS, payload: data });
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      navigate('/login-register');
+      dispatch(signout(navigate)); 
     }
     dispatch({
       type: GET_PATIENT_DISEASES_FAIL,
@@ -83,7 +83,7 @@ export const patientDiseaseCreate = (navigate,patientCNIC,disease) => async (dis
     dispatch({ type: CREATE_PATIENT_DISEASES_SUCCESS, payload: data.message });
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      navigate('/login-register');
+      dispatch(signout(navigate)); 
     }
     dispatch({
       type: CREATE_PATIENT_DISEASES_FAIL,
@@ -108,7 +108,7 @@ export const patientPrescriptionCreate = (navigate,diseaseId, doctorId, prescrip
     dispatch({ type: CREATE_PATIENT_PRESCRIPTION_SUCCESS, payload: data.message });
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      navigate('/login-register');
+      dispatch(signout(navigate)); 
     }
     dispatch({
       type: CREATE_PATIENT_PRESCRIPTION_FAIL,
@@ -134,7 +134,7 @@ export const fetchDiseaseById = (navigate,diseaseId) => async (dispatch,getState
     dispatch({ type: DISEASE_FETCH_SUCCESS, payload: data });
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      navigate('/login-register');
+      dispatch(signout(navigate)); 
     }
     dispatch({
       type: DISEASE_FETCH_FAIL,

@@ -5,6 +5,8 @@ import { getCrimeById } from '../actions/crimeActions';
 import LoadingBox from './LoadingBox';
 import MessageBox from './MessageBox';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
 
 const CrimeDetails = () => {
     const data ={
@@ -120,6 +122,9 @@ const CrimeDetails = () => {
             <p className="fir-description">{`Officer Name: ${fir.assignedOfficerName}`}</p>
             <p className="fir-description">{`Officer Cell: ${fir.officerCell}`}</p>
             <p className="fir-description">{`Report: ${fir.incidentReport}`}</p>
+            <p className="fir-description">{`Document: ${fir.incidentReport}`}</p>
+            <p className="fir-description">document_1: {fir.document_1?<Link to={`fir-file/${fir.document_1}`}>View Report</Link>:NaN}</p>
+            <p className="fir-description">document_2: {fir.document_2?<Link to={`fir-file/${fir.document_2}`}>View Report</Link>:NaN}</p>
             <p className="fir-status">{fir.status}</p>
           </div>
         ))}

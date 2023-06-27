@@ -8,7 +8,7 @@ const HomeScreen = () => {
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo }= userSignin;
   return (<>
-    {userInfo.data && userInfo.data.includes("ADMIN_USER")?<><GetPatientForm/><GetCriminalForm/></>:userInfo.data.includes("RESCUE_USER")?
+    {userInfo && userInfo.data && userInfo.data.includes("ADMIN_USER")?<><GetPatientForm/><GetCriminalForm/></>:userInfo.data.includes("RESCUE_USER")?
          <GetPatientForm/>: <GetCriminalForm/>}
 </>
   )

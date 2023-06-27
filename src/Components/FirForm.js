@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { Form, Col, Row } from "react-bootstrap";
+import { useNavigate } from 'react-router-dom';
+import { SERVER_IP } from "../actions/userActions";
+import { useSelector } from "react-redux";
+
+import Axios from "axios";
 
 function FirForm(props) {
   const [fir, setFir] = useState([
@@ -16,18 +20,36 @@ function FirForm(props) {
       document_2: "",
     },
   ]);
-  const [imageFile, setImageFile] = useState(null);
-  const [pdfFile, setPdfFile] = useState(null);
+  const userSignin = useSelector((state) => state.userSignin);
+  const { userInfo } = userSignin;
+  const navigate = useNavigate();
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    setImageFile(file);
+  const handleFileUpload = async (event, index, field) => {
+    const file = event.target.files[0]; // Get the selected file
+    const formData = new FormData();
+    formData.append('file', file); // Append the file to the FormData object
+    try {
+      const response = await Axios.post(`http://${SERVER_IP}/authentication-service/file/upload/`, formData, {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+          'Content-Type': 'multipart/form-data', // Set the content type to multipart/form-data
+        },
+      });
+      const uploadedFile = response.data.data; // Get the uploaded file data from the response
+      setFir((prevFir) => {
+        const updatedFir = [...prevFir];
+        updatedFir[index] = { ...updatedFir[index], [field]: uploadedFile };
+        return updatedFir;
+      });
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        navigate('/login-register');
+      }
+      // Handle any errors that occurred during the file upload
+      console.error(error);
+    }
   };
-
-  const handlePdfUpload = (event) => {
-    const file = event.target.files[0];
-    setPdfFile(file);
-  };
+  
 
   const handleFirInputChange = (event, index, field) => {
     const value = event.target.value;
@@ -209,24 +231,26 @@ function FirForm(props) {
           </div>
 
           <div className="col-md-3 mt-0">
-            <label className="form-label mb-1" htmlFor="file-upload">Upload Document 1:</label>
+            <label className="form-label mb-1" htmlFor="file-upload1">Upload Document 1:</label>
             <input
               id="file-upload1"
               type="file"
+              defaultValue=""
+              accept=".pdf, .jpg, .jpeg, .png"
+              onChange={(event) => handleFileUpload(event, index, "document_1")}
               className="form-control"
-              accept="image/*,.pdf"
-              onChange={handleImageUpload}
             />
           </div>
 
           <div className="col-md-3 mt-0">
-            <label className="form-label mb-1" htmlFor="file-upload">Upload Document 1:</label>
+            <label className="form-label mb-1" htmlFor="file-upload2">Upload Document 2:</label>
             <input
-              id="file-upload1"
+              id="file-upload2"
               type="file"
+              defaultValue=""
+              accept=".pdf,  .jpg, .jpeg, .png" 
+              onChange={(event) => handleFileUpload(event, index, "document_2")}
               className="form-control"
-              accept=".pdf"
-              onChange={handlePdfUpload}
             />
           </div>
 

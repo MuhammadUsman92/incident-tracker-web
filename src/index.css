@@ -12,12 +12,27 @@ body {
 #root {
     height: 100vh;
   }
-  
+.file-viewer-image{
+  width: 100%;
+}
 .center-div {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 90vh;
+}
+.top-bar{
+    display: flex;
+    justify-content: space-between;
+}
+.logout-link {
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.logout-link:hover {
+  text-decoration: underline;
 }
 .link-reset {
   display: inline;
@@ -428,6 +443,32 @@ input[type=number]::-webkit-outer-spin-button {
 .criminal-location {
   font-size: 14px;
   font-style: italic;
+}
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f8f8f8;
+}
+
+.error-container h1 {
+  font-size: 6rem;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.error-container p {
+  font-size: 2rem;
+  color: #666;
+}
+
+.charts-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-gap: 20px;
+  border-top: 1px solid #ccc;
 }
 
 

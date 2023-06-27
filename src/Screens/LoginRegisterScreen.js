@@ -15,8 +15,11 @@ import {
 } from 'mdb-react-ui-kit';
 import LoadingBox from '../Components/LoadingBox';
 import MessageBox from '../Components/MessageBox';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-export default function LoginRegisterScreen() {
+
+
+export default function LoginRegisterScreen(props) {
     const [loginRegisterActive, setLoginRegisterActive] = useState('login');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -26,6 +29,9 @@ export default function LoginRegisterScreen() {
     const [emailValid, setEmailValid] = useState(false);
     const [passwordValid, setPasswordValid] = useState(false);
     const [againPasswordValid, setAgainPasswordValid] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
+      
     const handleLoginRegisterClick = (type) => {
         setLoginRegisterActive(type);
     };
@@ -41,7 +47,6 @@ export default function LoginRegisterScreen() {
     const userRegister = useSelector((state) => state.userRegister);
     const loadingReg = userRegister.loading;
     const errorReg = userRegister.error;
-    const userInfoReg = userRegister.userInfo;
     const handleSubmitRegister = (event) => {
         event.preventDefault();
         if(passwordValid && emailValid && againPasswordValid){
@@ -50,6 +55,12 @@ export default function LoginRegisterScreen() {
         }
         console.log("after");
     }
+    useEffect(() => {
+        if (userInfo && (userInfo.data.includes("RESCUE_USER") || userInfo.data.includes("POLICE_USER"))) {
+          const redirect = location.search ? location.search.split('=')[1] : '/';
+          navigate(redirect);
+        }
+      }, [navigate, location.search, userInfo]);
     const validateEmail = (e) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         setEmailValid(emailRegex.test(e.target.value));
@@ -64,8 +75,6 @@ export default function LoginRegisterScreen() {
     }
     return (
         <>
-            {(loadingReg || loading) && <LoadingBox/>}
-            {(errorReg || error) && <MessageBox variant="danger">{error?error:errorReg}</MessageBox>}
             <div className='center-div'>
                 <div>
                     <MDBTabs pills justify className='mb-3'>
@@ -114,11 +123,17 @@ export default function LoginRegisterScreen() {
                                     }}
                                     required
                                 />
-                                <MDBCheckbox label='Remember me' />
-                                <MDBRow className='mb-4'>
-                                <MDBCol>
-                                    <a href='#!'>Forgot password?</a>
-                                </MDBCol>
+                                {/* <MDBCheckbox label='Remember me' /> */}
+                            <MDBRow className='mb-0'>
+                            {loading && <LoadingBox/>}
+                            {error && (
+                            error.response  ? (
+                            error.response.status === 401 ? <MessageBox variant="danger">Wrong Email and Password</MessageBox>
+                            :error.response.data.message ? <MessageBox variant="danger">{error.response.data.message}</MessageBox>:
+                            error.response.data.status && <MessageBox variant="danger">Request Failed with status code {error.response.data.status}</MessageBox>)
+                            :error.message && <MessageBox variant="danger">{error.message}</MessageBox>
+                            )
+                            }
                             </MDBRow>
                             <MDBBtn type='submit' className='mb-4' block disabled={loading}>
                                 Sign in
@@ -189,9 +204,19 @@ export default function LoginRegisterScreen() {
                                 <MDBCheckbox
                                 wrapperClass='mb-4'
                                 label='I agree to the terms and conditions'
-                                id='form2Example3'
                                 required
                             />
+                            <MDBRow className='mb-0'>
+                            {loadingReg && <LoadingBox/>}
+                            {errorReg && (
+                            errorReg.response  ? (
+                            errorReg.response.status === 401 ? <MessageBox variant="danger">Wrong Email and Password</MessageBox>
+                            :errorReg.response.data.message ? <MessageBox variant="danger">{errorReg.response.data.message}</MessageBox>:
+                            errorReg.response.data.status && <MessageBox variant="danger">Request Failed with status code {errorReg.response.data.status}</MessageBox>)
+                            :errorReg.message && <MessageBox variant="danger">{errorReg.message}</MessageBox>
+                            )
+                            }
+                            </MDBRow>
                             <MDBBtn type='submit' className='mb-4' block disabled={loadingReg} >
                                 Register
                             </MDBBtn>

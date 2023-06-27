@@ -4,7 +4,7 @@ import {
     LABORATORY_CREATION_SUCCESS,
     LABORATORY_CREATION_FAIL,
 } from '../constants/laboratoryConstants';
-import { SERVER_IP } from "./userActions";
+import { SERVER_IP,signout } from "./userActions";
 
 
 export const laboratoryCreate = (navigate,laboratory) => async (dispatch, getState) => {
@@ -21,8 +21,8 @@ export const laboratoryCreate = (navigate,laboratory) => async (dispatch, getSta
         dispatch({ type: LABORATORY_CREATION_SUCCESS, payload: data.message });
     } catch (error) {
         if (error.response && error.response.status === 401) {
-            navigate('/login-register');
-          }
+            dispatch(signout(navigate)); 
+        }
         dispatch({
             type: LABORATORY_CREATION_FAIL,
             payload:

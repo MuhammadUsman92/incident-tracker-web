@@ -3,7 +3,6 @@ import "mdb-react-ui-kit/dist/css/mdb.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { BrowserRouter, Routes, Route, useLocation, Link } from 'react-router-dom';
 import SideNavigation from "./Components/SideNavigation";
-import DashboardScreen from "./Screens/DashboardScreen";
 import AddPatientScreen from "./Screens/AddPatientScreen";
 import UsersListScreen from "./Screens/UsersListScreen";
 import PatientProfile from "./Components/PatientProfile";
@@ -20,11 +19,14 @@ import AddFirScreen from "./Screens/AddFirScreen";
 import HomeScreen from "./Screens/HomeScreen";
 import LoginRegisterScreen from "./Screens/LoginRegisterScreen";
 import PrivateRoutes from "./utils/PrivateRoutes";
-import CrimeForm from "./Components/CrimeForm";
 import CreateReportForm from "./Components/CreateReportForm";
-import Map from "./Components/MapScreen";
 import CriminalStatusForm from "./Components/CriminalStatusFrom";
-import MapScreen from "./Components/MapScreen";
+import FileViewer from "./Components/FileViewer";
+import { useDispatch } from 'react-redux';
+import { signout } from './actions/userActions';
+import Error404 from "./Components/Error404";
+import { useNavigate } from 'react-router-dom';
+import HealthMapScreen from "./Components/HealthMapScreen";
 
 
 const Breadcrumb = () => {
@@ -36,7 +38,7 @@ const Breadcrumb = () => {
     const convertedStr = capitalizedWords.join(' ');
     return convertedStr;
   }
-  const notLinks = ['patient-details','disease-details','create-prescription','add-report','criminal-status','criminal-details','crime-details'];
+  const notLinks = ['patient-details','disease-details','create-prescription','add-report','criminal-status','criminal-details','crime-details','report-file','fir-file'];
   return (
     <nav aria-label="breadcrumb">
       <ol className="breadcrumb">
@@ -68,32 +70,65 @@ const Breadcrumb = () => {
 
 const MainRoutes = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isLoginPage = location.pathname === "/login-register";
-
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    // Perform logout actions
+    // For example, clear authentication token, user data, etc.
+    // Then redirect to the login page
+    console.log("click");
+    dispatch(signout(navigate));
+  };
   return (
     <>
       {!isLoginPage && <SideNavigation selectedLink={location.pathname} />}
       <div className="main-container m-3">
-      {!isLoginPage && <Breadcrumb />}
+      {!isLoginPage && <div className="top-bar">
+      <Breadcrumb />
+      <a className="logout-link" onClick={handleLogout}>Logout</a>
+      </div>
+      }
         <Routes>
-          <Route element={<PatientProfile />} path="/patient-details/:patientId" />
-          <Route element={<DiseaseDetails />} path="/patient-details/:patientId/disease-details/:diseaseId" />
-          <Route element={<CreateDiseaseForm />} path="/patient-details/:patientId/create-disease" />
-          <Route element={<AddPatientScreen />} path="/patient-details/:patientId/disease-details/:diseaseId/create-prescription" />
-          <Route element={<CreateReportForm />} path="/patient-details/:patientId/disease-details/:diseaseId/add-report/:prescriptionId" />
-          <Route element={<CreatePatientForm />} path="/create-patient" />
-          <Route element={<CreateDoctorForm />} path="/create-doctor" />
-          <Route element={<CreateHospitalForm />} path="/create-hospital" />
-          <Route element={<CreateLaboratoryFrom />} path="/create-laboratory" />
-          <Route element={<CreateCriminalForm />} path="/create-criminal" />
-          <Route element={<AddFirScreen />} path="/create-crime" />
-          <Route element={<CriminalDetails />} path="/criminal-details/:criminalId" />
-          <Route element={<CriminalStatusForm />} path="/criminal-details/:criminalId/criminal-status" />
-          <Route element={<CrimeDetails />} path="/criminal-details/:criminalId/crime-details/:id" />
-          <Route element={<UsersListScreen />} path="/all-users" />
+          <Route element={<PrivateRoutes role="RESCUE_USER" />}>
+            <Route element={<PatientProfile />} path="/patient-details/:patientId" />
+            <Route element={<DiseaseDetails />} path="/patient-details/:patientId/disease-details/:diseaseId" />
+            <Route element={<FileViewer />} path="/patient-details/:patientId/disease-details/:diseaseId/report-file/:name" />
+          </Route>
+          <Route element={<PrivateRoutes role="HOSPITAL_ADMIN" />}>
+            <Route element={<CreateDiseaseForm />} path="/patient-details/:patientId/create-disease" />
+            <Route element={<AddPatientScreen />} path="/patient-details/:patientId/disease-details/:diseaseId/create-prescription" />
+            <Route element={<CreateReportForm />} path="/patient-details/:patientId/disease-details/:diseaseId/add-report/:prescriptionId" />
+            <Route element={<CreatePatientForm />} path="/create-patient" />
+            <Route element={<CreateDoctorForm />} path="/create-doctor" />
+          </Route>
+          <Route element={<PrivateRoutes role="RESCUE_ADMIN" />}>  
+            <Route element={<CreateHospitalForm />} path="/create-hospital" />
+            <Route element={<CreateLaboratoryFrom />} path="/create-laboratory" />
+            <Route element={<HealthMapScreen />} path="/health-statistics" />
+          </Route>
+          <Route element={<PrivateRoutes role="POLICE_USER" />}>
+            <Route element={<CriminalDetails />} path="/criminal-details/:criminalId" />
+            <Route element={<CrimeDetails />} path="/criminal-details/:criminalId/crime-details/:id" />
+            <Route element={<FileViewer />} path="/criminal-details/:criminalId/crime-details/:id/fir-file/:name"  />
+          </Route>
+          <Route element={<PrivateRoutes role="POLICE_ADMIN" />}>
+            <Route element={<CreateCriminalForm />} path="/create-criminal" />
+            <Route element={<AddFirScreen />} path="/create-crime" />
+            <Route element={<CriminalStatusForm />} path="/criminal-details/:criminalId/criminal-status" />
+          </Route>
+          <Route element={<PrivateRoutes role="ADMIN_USER" />}>  
+            <Route element={<UsersListScreen />} path="/all-users" />
+          </Route>
+          <Route element={<PrivateRoutes role="ADMIN_USER" />}>  
+            <Route element={<HomeScreen />} path="/" exact />
+          </Route>
+
+          <Route element={<Error404 />} path="*" />
+
+          
           <Route element={<LoginRegisterScreen />} path="/login-register" />
-          {/* <Route element={<HomeScreen />} path="/" exact /> */}
-          <Route element={<MapScreen />} path="/" exact />
+          
 
         </Routes>
       </div>

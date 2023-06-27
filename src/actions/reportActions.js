@@ -4,7 +4,7 @@ import {
   REPORT_CREATION_SUCCESS,
   REPORT_CREATION_FAIL,
 } from "../constants/reportConstants";
-import { SERVER_IP } from "./userActions";
+import { SERVER_IP,signout } from "./userActions";
 
 export const createReport = (navigate,prescriptionId,laboratoryId,report) => async (dispatch,getState) => {
   dispatch({ type: REPORT_CREATION_REQUEST, payload: report });
@@ -19,9 +19,10 @@ export const createReport = (navigate,prescriptionId,laboratoryId,report) => asy
       },
     });
     dispatch({ type: REPORT_CREATION_SUCCESS, payload: data.message });
+    console.log(data);
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      navigate('/login-register');
+      dispatch(signout(navigate)); 
     }
     dispatch({
       type: REPORT_CREATION_FAIL,

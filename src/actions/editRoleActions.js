@@ -4,8 +4,7 @@ import {
   EDIT_ROLE_SUCCESS,
   EDIT_ROLE_FAIL,
 } from "../constants/editRolesConstants";
-import { SERVER_IP } from "./userActions";
-import {getAllUsers} from './userActions'
+import { SERVER_IP,signout,getAllUsers } from "./userActions";
 
 export const editUserRole =
   (navigate,userId, roles) => async (dispatch, getState) => {
@@ -23,7 +22,7 @@ export const editUserRole =
       dispatch(getAllUsers(navigate));
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        navigate('/login-register');
+        dispatch(signout(navigate));
       }
       dispatch({
         type: EDIT_ROLE_FAIL,

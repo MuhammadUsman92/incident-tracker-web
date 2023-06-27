@@ -1,9 +1,11 @@
 import { Outlet, Navigate } from 'react-router-dom'
+import { useSelector} from 'react-redux';
 
-const PrivateRoutes = () => {
-    let auth = {'token':false}
+const PrivateRoutes = (props) => {
+    const userSignin = useSelector((state) => state.userSignin);
+    const { userInfo } = userSignin;
     return(
-        auth.token ? <Outlet/> : <Navigate to="/login-register"/>
+        userInfo && userInfo.token && userInfo.data.includes(props.role) ? <Outlet/> : <Navigate to="/login-register"/>
     )
 }
 

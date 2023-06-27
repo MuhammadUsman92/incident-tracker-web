@@ -4,7 +4,7 @@ import {
     DOCTOR_CREATION_SUCCESS,
     DOCTOR_CREATION_FAIL,
 } from '../constants/doctorConstants';
-import { SERVER_IP } from "./userActions";
+import { SERVER_IP,signout } from "./userActions";
 
 
 export const doctorCreate = (navigate,doctor) => async (dispatch, getState) => {
@@ -21,8 +21,8 @@ export const doctorCreate = (navigate,doctor) => async (dispatch, getState) => {
         dispatch({ type: DOCTOR_CREATION_SUCCESS, payload: data.message });
     } catch (error) {
         if (error.response && error.response.status === 401) {
-            navigate('/login-register');
-          }
+            dispatch(signout(navigate));
+        }
         dispatch({
             type: DOCTOR_CREATION_FAIL,
             payload:

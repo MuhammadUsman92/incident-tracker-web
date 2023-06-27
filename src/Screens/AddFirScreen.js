@@ -92,7 +92,7 @@ function AddFirScreen(props) {
     // Proceed with form submission
     const formData = {
       type: crimeData.type,
-      incidentDateTime:crimeData.incidentDateTime,
+      incidentDate:crimeData.incidentDateTime,
       incidentLocation:{
       street: crimeData.street,
       city: crimeData.city,
@@ -109,10 +109,8 @@ function AddFirScreen(props) {
         formData.incidentLocation.postal_code,
         formData.incidentLocation.country
       );
-
       formData.incidentLocation.latitude = latitude;
       formData.incidentLocation.longitude = longitude;
-
       console.log(formData); // Form data including latitude and longitude
       dispatch(createCrime(navigate,formData));
     } catch (error) {
@@ -120,7 +118,6 @@ function AddFirScreen(props) {
       // Handle error
       dispatch(createCrime(navigate,formData));
     }
-    console.log(formData);
   };
 
   return (
@@ -167,6 +164,7 @@ function AddFirScreen(props) {
                 type="submit"
                 className="btn btn-success btn-lg"
                 onClick={handleSubmit}
+                disabled={loading}
               >
                 Submit
               </button>

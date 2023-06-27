@@ -61,15 +61,15 @@ function SideNavigation({ selectedLink }) {
               }}
             />
           </NavIcon>
-          {userInfo.data && userInfo.data.includes("ADMIN_USER") ? (
+          {userInfo && userInfo.data && userInfo.data.includes("ADMIN_USER") ? (
             <NavText>Get Record</NavText>
-          ) : userInfo.data.includes("RESCUE_USER") ? (
+          ) : userInfo && userInfo.data.includes("RESCUE_USER") ? (
             <NavText>Get Patient Record</NavText>
           ) : (
             <NavText>Get Criminal Record</NavText>
           )}
         </NavItem>
-        {userInfo.data && userInfo.data.includes("HOSPITAL_ADMIN") && (
+        {userInfo && userInfo.data &&userInfo.data.includes("HOSPITAL_ADMIN") && (
           <NavItem eventKey="/create-patient" active={selectedLink === "/create-patient"}>
             <NavIcon>
               <img
@@ -85,7 +85,7 @@ function SideNavigation({ selectedLink }) {
             <NavText>Create Patient</NavText>
           </NavItem>
         )}
-        {userInfo.data && userInfo.data.includes("HOSPITAL_ADMIN") && (
+        {userInfo && userInfo.data && userInfo.data.includes("HOSPITAL_ADMIN") && (
           <NavItem eventKey="/create-doctor" active={selectedLink === "/create-doctor"}>
             <NavIcon>
               <img
@@ -101,7 +101,7 @@ function SideNavigation({ selectedLink }) {
             <NavText>Create Doctor</NavText>
           </NavItem>
         )}
-        {userInfo.data && userInfo.data.includes("RESCUE_ADMIN") && (
+        {userInfo && userInfo.data && userInfo.data.includes("RESCUE_ADMIN") && (
           <NavItem eventKey="/create-hospital" active={selectedLink === "/create-hospital"}>
             <NavIcon>
               <img
@@ -117,7 +117,7 @@ function SideNavigation({ selectedLink }) {
             <NavText>Create Hospital</NavText>
           </NavItem>
         )}
-        {userInfo.data && userInfo.data.includes("RESCUE_ADMIN") && (
+        {userInfo && userInfo.data && userInfo.data.includes("RESCUE_ADMIN") && (
           <NavItem eventKey="/create-laboratory" active={selectedLink === "/create-laboratory"}>
             <NavIcon>
               <img
@@ -133,7 +133,23 @@ function SideNavigation({ selectedLink }) {
             <NavText>Create Laboratory</NavText>
           </NavItem>
         )}
-        {userInfo.data && userInfo.data.includes("POLICE_ADMIN") && (
+        {userInfo && userInfo.data && userInfo.data.includes("RESCUE_ADMIN") && (
+          <NavItem eventKey="/health-statistics" active={selectedLink === "/health-statistics"}>
+            <NavIcon>
+              <img
+                src={require("../images/health_chart.png")}
+                alt="health-statistics"
+                style={{
+                  padding: "2px",
+                  width: "3em",
+                  filter: "grayscale(100%) brightness(1000%)",
+                }}
+              />
+            </NavIcon>
+            <NavText>Health Statistics</NavText>
+          </NavItem>
+        )}
+        {userInfo && userInfo.data && userInfo.data.includes("POLICE_ADMIN") && (
           <NavItem eventKey="/create-crime" active={selectedLink === "/create-crime"}>
             <NavIcon>
               <img
@@ -149,7 +165,7 @@ function SideNavigation({ selectedLink }) {
             <NavText>Create Crime</NavText>
           </NavItem>
         )}
-        {userInfo.data && userInfo.data.includes("POLICE_ADMIN") && (
+        {userInfo && userInfo.data &&userInfo.data.includes("POLICE_ADMIN") && (
           <NavItem eventKey="/create-criminal" active={selectedLink === "/create-criminal"}>
             <NavIcon>
               <img
@@ -165,7 +181,7 @@ function SideNavigation({ selectedLink }) {
             <NavText>Create Criminal</NavText>
           </NavItem>
         )}
-        {userInfo.data && userInfo.data.includes("ADMIN_USER") && (
+        {userInfo && userInfo.data && userInfo.data.includes("ADMIN_USER") && (
           <NavItem eventKey="/all-users" active={selectedLink === "/all-users"}>
             <NavIcon>
               <img

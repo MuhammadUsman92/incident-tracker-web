@@ -7,7 +7,7 @@ import {
   GET_CRIME_SUCCESS,
   GET_CRIME_FAIL,
 } from "../constants/crimeConstants";
-import { SERVER_IP } from "./userActions";
+import { SERVER_IP,signout } from "./userActions";
 
 export const createCrime = (navigate,crime) => async (dispatch,getState) => {
   dispatch({ type: CRIME_CREATION_REQUEST, payload: crime });
@@ -20,10 +20,12 @@ export const createCrime = (navigate,crime) => async (dispatch,getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     });
+    
+    console.log(data)
     dispatch({ type: CRIME_CREATION_SUCCESS, payload: data.message });
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      navigate('/login-register');
+      dispatch(signout(navigate));
     }
     dispatch({
       type: CRIME_CREATION_FAIL,
@@ -52,7 +54,7 @@ export const getCrimeById = (navigate,crimeId) => async (dispatch, getState) => 
     dispatch({ type: GET_CRIME_SUCCESS, payload: data });
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      navigate('/login-register');
+      dispatch(signout(navigate));
     }
     dispatch({
       type: GET_CRIME_FAIL,
