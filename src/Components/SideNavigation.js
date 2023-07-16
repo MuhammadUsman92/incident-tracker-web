@@ -1,11 +1,10 @@
 import React from "react";
 import SideNav, { NavItem, NavIcon, NavText } from "@trendmicro/react-sidenav";
 import "@trendmicro/react-sidenav/dist/react-sidenav.css";
-import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import logo from "../Assets/logo.png";
 import { useSelector } from "react-redux";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function SideNavigation({ selectedLink }) {
   const navigate = useNavigate();
@@ -179,6 +178,22 @@ function SideNavigation({ selectedLink }) {
               />
             </NavIcon>
             <NavText>Create Criminal</NavText>
+          </NavItem>
+        )}
+        {userInfo && userInfo.data && userInfo.data.includes("POLICE_ADMIN") && (
+          <NavItem eventKey="/crime-statistics" active={selectedLink === "/crime-statistics"}>
+            <NavIcon>
+              <img
+                src={require("../images/crime_chart.png")}
+                alt="health-statistics"
+                style={{
+                  padding: "2px",
+                  width: "3em",
+                  filter: "grayscale(100%) brightness(1000%)",
+                }}
+              />
+            </NavIcon>
+            <NavText>Crime Statistics</NavText>
           </NavItem>
         )}
         {userInfo && userInfo.data && userInfo.data.includes("ADMIN_USER") && (

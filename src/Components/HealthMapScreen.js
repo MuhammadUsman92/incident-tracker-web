@@ -1,178 +1,73 @@
-import React, { useState, useEffect } from "react";
-import { GoogleMap, Circle, Marker, InfoWindow } from "@react-google-maps/api";
+import React, { useState, useEffect, useRef } from "react";
+import { GoogleMap, Circle} from "@react-google-maps/api";
+import { useDispatch, useSelector } from "react-redux";
+import {patientMapLocationGet} from '../actions/patientMapLocationActions'
+import { useNavigate  } from 'react-router-dom';
+import LoadingBox from './LoadingBox';
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from "react-places-autocomplete";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell} from 'recharts';
+import { Col, Row } from "react-bootstrap";
+import MessageBox from "./MessageBox";
+
 
 const HealthMapScreen = () => {
   const [circlePosition, setCirclePosition] = useState({
-    lat: 51.505,
-    lng: -0.09,
+    lat: 31.4517252,
+    lng: 74.2936701,
   });
-  const [circleRadius, setCircleRadius] = useState(150);
-  const [displayedRadius, setDisplayedRadius] = useState(10);
+  const [circleRadius, setCircleRadius] = useState(500);
+  const [displayedRadius, setDisplayedRadius] = useState(500);
   const [circle, setCircle] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [address, setAddress] = useState("");
+  const [map, setMap] = useState(null);
+  const getPatientMapLocation = useSelector((state) => state.getPatientMapLocation);
+  const { loading, response, error } = getPatientMapLocation;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const data = [
-    {
-      name: "Usman Khokhar",
-      email: "raza@gmail.com",
-      bloodGroup: "A-",
-      age: 20,
-      height: 5.5,
-      weight: 80.0,
-      gender: "MALE",
-      location: {
-        street: "148 D Block",
-        city: "Lahore",
-        postal_code: "45900",
-        latitude: 35.80008,
-        longitude: 74.9999,
-        country: "Pakistan",
-      },
-      diseaseSet: [
-        {
-          id: 3,
-          name: "COVID-19",
-          stage: "Severe",
-          patientDto: null,
-          prescriptionDtoSet: [],
-        },
-        {
-          id: 2,
-          name: "Malaria",
-          stage: "Moderate",
-          patientDto: null,
-          prescriptionDtoSet: [],
-        },
-        {
-          id: 4,
-          name: "Common Cold",
-          stage: "Mild",
-          patientDto: null,
-          prescriptionDtoSet: [],
-        },
-      ],
-      doctorSet: [],
-      hospitalSet: [],
-      cnic: "11111-1111111-1",
-    },
-    {
-      name: "عثمان",
-      email: "admin@gmail.com",
-      bloodGroup: "B-",
-      age: 20,
-      height: 6.0,
-      weight: 80.0,
-      gender: "MALE",
-      location: {
-        street: "Street Name",
-        city: "City Name",
-        postal_code: "Postal Code",
-        latitude: 35.80008,
-        longitude: 74.9999,
-        country: null,
-      },
-      diseaseSet: [
-        {
-          id: 1,
-          name: "Common Cold",
-          stage: "Mild",
-          patientDto: null,
-          prescriptionDtoSet: [],
-        },
-      ],
-      doctorSet: [],
-      hospitalSet: [],
-      cnic: "33333-3333333-1",
-    },
-    {
-      name: "عثمان",
-      email: "admin@gmail.com",
-      bloodGroup: "B-",
-      age: 20,
-      height: 6.0,
-      weight: 80.0,
-      gender: "MALE",
-      location: {
-        street: "Street Name",
-        city: "City Name",
-        postal_code: "Postal Code",
-        latitude: 35.80008,
-        longitude: 74.9999,
-        country: null,
-      },
-      diseaseSet: [
-        {
-          id: 1,
-          name: "Common Cold",
-          stage: "Mild",
-          patientDto: null,
-          prescriptionDtoSet: [],
-        },
-      ],
-      doctorSet: [],
-      hospitalSet: [],
-      cnic: "33333-3333333-1",
-    },
-  ];
-  
-
-
-  const diseases = data.map(patient => patient.diseaseSet).flat();
-  
-  // Calculate disease counts
-  const diseaseCounts = diseases.reduce((counts, disease) => {
+  const getPatientBtnHandler = () => {
+      const formData = {
+        lat:circle.center.lat(),
+        long:circle.center.lng(),
+        radius:circle.radius,
+      };
+      dispatch(patientMapLocationGet(navigate,formData));
+      if(!loading && response){
+        console.log(response);
+        addMarkers(response.data);
+      }
+  };
+  const data = response?.data;
+  const diseases = data?.map(patient => patient.diseaseSet).flat();
+  const diseaseCounts = diseases?.reduce((counts, disease) => {
     const { name } = disease;
     counts[name] = (counts[name] || 0) + 1;
     return counts;
   }, {});
-
-  // Convert disease counts to an array of objects
-  const chartData = Object.keys(diseaseCounts).map(name => ({
+  const chartData = diseaseCounts?Object.keys(diseaseCounts).map(name => ({
     name,
     count: diseaseCounts[name],
-  }));
+  })):null;
+  const pieChartData = diseaseCounts?Object.keys(diseaseCounts).map(name => ({
+    name,
+    value: diseaseCounts[name],
+  })):null;
 
-// Convert disease counts to an array of objects for PieChart
-const pieChartData = Object.keys(diseaseCounts).map(name => ({
-  name,
-  value: diseaseCounts[name],
-}));
-
-// Define colors for PieChart
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7f50', '#0088FE', '#00C49F'];
-
-// Generate random data for LineChart
-const generateRandomData = () => {
-  const data = [];
-  for (let i = 1; i <= 12; i++) {
-    data.push({ month: `Month ${i}`, count: Math.floor(Math.random() * 100) });
-  }
-  return data;
-};
-
-const lineChartData = generateRandomData();
-
-
-
   const mapContainerStyle = {
-    height: "90vh", 
+    height: "85vh", 
     width: "100%",
   };
-
   const searchInputStyle = {
     width: "60%",
     textAlign:'center',
   };
-
-  
-
   const onLoad = (map) => {
+    setMap(map)
     setCircle(null);
     const newCircle = new window.google.maps.Circle({
       map: map,
@@ -182,29 +77,16 @@ const lineChartData = generateRandomData();
       editable: true,
     });
     setCircle(newCircle);
-
     newCircle.addListener("drag", handleCircleDrag);
     newCircle.addListener("radius_changed", handleCircleRadiusChange);
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userPosition = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          setCirclePosition(userPosition);
-          map.setCenter(userPosition);
-          newCircle.setCenter(userPosition);
-        },
-        (error) => {
-          console.error("Error getting user's location:", error);
-        }
-      );
-    }
   };
-
+  const mapContainerRef = useRef(null);
   useEffect(() => {
+    const mapInstance = new window.google.maps.Map(mapContainerRef.current, {
+      center: circlePosition,
+      zoom: 15,
+    });
+    setMap(mapInstance);
     if (circle) {
       circle.setCenter(circlePosition);
     }
@@ -216,6 +98,12 @@ const lineChartData = generateRandomData();
       setDisplayedRadius(circleRadius);
     }
   }, [circleRadius]);
+  useEffect(() => {
+    if (!loading && response) {
+      console.log(response);
+      addMarkers(response.data);
+    }
+  }, [loading, response, circle]);
 
   const handleCircleDrag = () => {
     if (circle) {
@@ -223,53 +111,91 @@ const lineChartData = generateRandomData();
       setCirclePosition({ lat: newPosition.lat(), lng: newPosition.lng() });
     }
   };
-
   const handleCircleRadiusChange = () => {
     if (circle) {
-      const newRadius = circle.getRadius();
+      const newRadius = circle.getRadius(); 
       setDisplayedRadius(newRadius);
+      setCircleRadius(newRadius);
     }
   };
-
   const addMarkers = (locations) => {
-    const newMarkers = locations.map((location) => {
-      return (
-        <Marker
-          key={location.title}
-          position={location}
-          title={location.title}
-          onMouseOver={(e) => {
-            e.target.openInfoWindow();
-          }}
-          onMouseOut={(e) => {
-            e.target.closeInfoWindow();
-          }}
-        >
-          <InfoWindow>
-            <div>
-              <h3>{location.title}</h3>
-              <p>{location.description}</p>
-            </div>
-          </InfoWindow>
-        </Marker>
-      );
+    // Clear existing markers
+    markers.forEach((marker) => {
+      marker.setMap(null);
     });
-
-    setMarkers((prevMarkers) => [...prevMarkers, ...newMarkers]);
+  
+    const markerDictionary = {};
+    locations.forEach((i) => {
+      const { name, diseaseSet, location } = i;
+      const latLng = `${location.latitude},${location.longitude}`;
+      if (markerDictionary[latLng]) {
+        markerDictionary[latLng].data.push({ name, diseaseSet });
+      } else {
+        const newMarker = {
+          position: { lat: location.latitude, lng: location.longitude },
+          data: [{ name, diseaseSet }],
+        };
+        markerDictionary[latLng] = newMarker;
+      }
+    });
+    const newMarkers = Object.values(markerDictionary);
+  
+    // Set the new markers
+    const createdMarkers = newMarkers.map((m) => {
+      const marker = new window.google.maps.Marker({
+        position: m.position,
+        map: map,
+        title: m.data.name,
+      });
+      const infoWindowContent = `
+      <div style="max-height: 200px; overflow-y: auto; min-width: 200px;">
+        ${m.data
+          .map(
+            (i) => `
+          <h3>${i.name}</h3>
+          ${i.diseaseSet
+            .map((t) => `
+            <p>${t.name}</p>
+          `)
+            .join("")}
+        `
+          )
+          .join("")}
+      </div>`;
+      const infoWindow = new window.google.maps.InfoWindow({
+        content: infoWindowContent,
+      });
+  
+      marker.addListener("click", () => {
+        infoWindow.open(map, marker);
+      });
+  
+      infoWindow.addListener("closeclick", () => {
+        infoWindow.close();
+      });
+  
+      return marker;
+    });
+  
+    // Update the markers state
+    setMarkers(createdMarkers);
   };
-
+  
+  
   const handleSelect = async (selectedAddress) => {
     try {
       const results = await geocodeByAddress(selectedAddress);
       const latLng = await getLatLng(results[0]);
+      console.log(latLng);
       setCirclePosition(latLng);
     } catch (error) {
       console.error("Error selecting address:", error);
     }
   };
-
   return (
   <>
+  {loading && <LoadingBox/>}
+  {error && <MessageBox variant="danger">{error}</MessageBox>}
     <div className="main-container">
       <div
         style={{
@@ -300,7 +226,7 @@ const lineChartData = generateRandomData();
                 {...getInputProps({
                   placeholder: "Search Location...",
                   className: "search-input",
-                  style: searchInputStyle, // Apply the searchInputStyle
+                  style: searchInputStyle, 
                 })}
                 style={{
                   width:'60%',
@@ -310,7 +236,7 @@ const lineChartData = generateRandomData();
               <div
                 className="autocomplete-dropdown-container search-suggestions"
               >
-                {loading && <div>Loading...</div>}
+                {loading && <LoadingBox></LoadingBox>}
                 {suggestions.map((suggestion) => {
                   const className = suggestion.active
                     ? "suggestion-item--active"
@@ -326,29 +252,51 @@ const lineChartData = generateRandomData();
           )}
         </PlacesAutocomplete>
       </div>
+      <div
+       style={{
+        position: "absolute",
+        top: '70px',
+        zIndex: 1,
+        right:'80px',
+        alignContent:'center',
+      }}
+      >
+      </div>
       <GoogleMap
+        ref={mapContainerRef}
         mapContainerStyle={mapContainerStyle}
         center={circlePosition}
         zoom={15}
         onLoad={onLoad}
       >
         {circle && <Circle center={circlePosition} radius={displayedRadius} />}
-        {markers}
+    
       </GoogleMap>
     </div>
-    <h2>Disease Statistics</h2>
-    <div className="charts-section">
+    <Row className="mt-3">
+      <Col>
+        <h2>Disease Statistics</h2>
+      </Col>
+      <Col className="text-center">
+        <button className="btn btn-primary" disabled={loading} onClick={getPatientBtnHandler}>Get health Statistics</button>
+      </Col>
+    </Row>
+    {response && response.data.length > 0 && <div className="charts-section">
       <div style={{marginTop:'8px'}}>
-        <BarChart width={500} height={400} data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="count" fill="#8884d8" />
-        </BarChart>
+      <BarChart width={500} height={400} data={chartData}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="count" fill={COLORS}>
+          {chartData.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Bar>
+      </BarChart>
       </div>
-      <div>
+      <div style={{marginTop:'8px'}}>
         <PieChart width={500} height={400}>
           <Pie
             data={pieChartData}
@@ -368,18 +316,7 @@ const lineChartData = generateRandomData();
           <Legend />
         </PieChart>
       </div>
-      {/* <div>
-        <h3>Line Chart</h3>
-        <LineChart width={400} height={400} data={lineChartData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="month" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="count" stroke="#8884d8" />
-        </LineChart>
-      </div> */}
-    </div>
+    </div>}
   </>
     
   );

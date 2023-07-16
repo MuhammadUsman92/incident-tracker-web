@@ -23,6 +23,11 @@ import { crimeCreationReducer,crimeGetReducer } from "./reducers/crimeReducers";
 import { reportCreationReducer } from "./reducers/reportReducers";
 import { roleEditReducer } from "./reducers/editRoleReducers";
 
+import {patientMapLocationReducers} from './reducers/patientMapLocationREducers'
+
+import {criminalMapLocationReducers} from './reducers/criminalMapLocationREducers'
+
+
 
 const initialState = {
   userSignin: {
@@ -50,6 +55,9 @@ const reducer = combineReducers({
   diseaseDetails:diseaseFetchReducer,
   crimeDetails:crimeGetReducer,
   criminalStatusCreate:createCriminalStatusReducer,
+  getPatientMapLocation: patientMapLocationReducers,
+  getCriminalMapLocation: criminalMapLocationReducers,
+
 });
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
