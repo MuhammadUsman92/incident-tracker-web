@@ -28,6 +28,7 @@ import Error404 from "./Components/Error404";
 import { useNavigate } from 'react-router-dom';
 import HealthMapScreen from "./Components/HealthMapScreen";
 import CriminalMapScreen from "./Components/CriminalMapScreen";
+import CrimePredication from "./Components/CrimePredication";
 
 
 const Breadcrumb = () => {
@@ -118,6 +119,7 @@ const MainRoutes = () => {
             <Route element={<AddFirScreen />} path="/create-crime" />
             <Route element={<CriminalStatusForm />} path="/criminal-details/:criminalId/criminal-status" />
             <Route element={<CriminalMapScreen />} path="/crime-statistics" />
+            <Route element={<CrimePredication />} path="/crime-prediction" />
           </Route>
           <Route element={<PrivateRoutes role="ADMIN_USER" />}>  
             <Route element={<UsersListScreen />} path="/all-users" />

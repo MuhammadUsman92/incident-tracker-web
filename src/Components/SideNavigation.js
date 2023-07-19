@@ -196,6 +196,22 @@ function SideNavigation({ selectedLink }) {
             <NavText>Crime Statistics</NavText>
           </NavItem>
         )}
+        {userInfo && userInfo.data && userInfo.data.includes("POLICE_ADMIN") && (
+          <NavItem eventKey="/crime-prediction" active={selectedLink === "/crime-prediction"}>
+            <NavIcon>
+              <img
+                src={require("../images/predictive-chart.png")}
+                alt="health-prediction"
+                style={{
+                  padding: "2px",
+                  width: "3em",
+                  filter: "grayscale(100%) brightness(1000%)",
+                }}
+              />
+            </NavIcon>
+            <NavText>Crime Prediction</NavText>
+          </NavItem>
+        )}
         {userInfo && userInfo.data && userInfo.data.includes("ADMIN_USER") && (
           <NavItem eventKey="/all-users" active={selectedLink === "/all-users"}>
             <NavIcon>
