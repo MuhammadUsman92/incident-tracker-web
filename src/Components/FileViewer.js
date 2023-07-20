@@ -5,6 +5,7 @@ import { Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import pdfjs from "pdfjs-dist/legacy/build/pdf";
 import { useNavigate,useParams  } from 'react-router-dom';
+import {SERVER_IP} from '../actions/userActions'
 
 
 // Import the default export from the pdf.worker.entry module
@@ -27,7 +28,7 @@ const FileViewer = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:8080/authentication-service/file/${name}`,
+        `http://${SERVER_IP}/authentication-service/file/${name}`,
         {
           headers: {
             Authorization: `Bearer ${userInfo.token}`,

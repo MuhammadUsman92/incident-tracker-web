@@ -12,7 +12,7 @@ import {
   GET_ALL_USER_SUCCESS,
 } from '../constants/userConstants';
 
-export const SERVER_IP = "localhost:8080";
+export const SERVER_IP = "34.29.122.144:80";
 
 export const register = (name, email, password) => async (dispatch) => {
   dispatch({ type: USER_REGISTER_REQUEST, payload: { email, password } });

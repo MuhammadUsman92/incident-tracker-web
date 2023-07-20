@@ -12,6 +12,7 @@ const CrimePredication = () => {
   const [long, setLong] = useState("");
   const [knn, setKnn] = useState(false);
   const [randomForest, setRandomForest] = useState(false);
+  const ip = "10.48.5.84:8888"
 
   useEffect(() => {
     fetchGraphs();
@@ -19,7 +20,7 @@ const CrimePredication = () => {
 
   const fetchGraphs = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:5000/api/graphs");
+      const response = await fetch(`http://${ip}/api/graphs`);
       const data = await response.json();
       setGraphs(data);
       setLoading(false);
@@ -38,7 +39,7 @@ const CrimePredication = () => {
       year: parseInt(year),
     };
 
-    const response = await fetch("http://127.0.0.1:5000/predict_crime_knn", {
+    const response = await fetch(`http://${ip}/predict_crime_knn`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -65,7 +66,7 @@ const CrimePredication = () => {
     };
 
     const response = await fetch(
-      "http://127.0.0.1:5000/predict_crime_random_forest",
+      `http://${ip}/predict_crime_random_forest`,
       {
         method: "POST",
         headers: {
@@ -96,7 +97,7 @@ const CrimePredication = () => {
   //     year: 2023, // Modify with the actual year
   //   };
 
-  //   const response = await fetch("http://127.0.0.1:5000/predict_crime", {
+  //   const response = await fetch(`http://${ip}/predict_crime`, {
   //     method: "POST",
   //     headers: {
   //       "Content-Type": "application/json",
