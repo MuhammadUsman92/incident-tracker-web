@@ -8,7 +8,7 @@ export default function Footer() {
             <div className='text-center p-3' style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
                 &copy; {new Date().getFullYear()} Copyright:{' '}
                 <a className='text-dark' href='https://usman'>
-                    Incident Tracker
+                    RP Service
                 </a>
             </div>
         </MDBFooter>

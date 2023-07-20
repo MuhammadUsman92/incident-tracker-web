@@ -21,7 +21,7 @@ function SideNavigation({ selectedLink }) {
     if (!isMobile) {
       return (
         <div className="header" style={{ backgroundColor: "#fff" }}>
-          <h5>Incident Tracker</h5>
+          <h5>RP Service</h5>
           <img
             src={logo}
             alt="Logo"
